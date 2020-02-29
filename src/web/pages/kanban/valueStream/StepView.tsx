@@ -47,7 +47,6 @@ export const StepView: React.FC<StepViewProps> = React.memo(props => {
     }, [streamId, step.id])
 
     const onModifyStep = React.useCallback((e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-        console.log(e.clientX, e.clientY)
         dispatch(setModifiedStep(step, { x: e.clientX, y: e.clientY }))
         setMenuAnchorEl(null)
     }, [step])

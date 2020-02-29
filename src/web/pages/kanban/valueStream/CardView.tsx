@@ -35,7 +35,8 @@ export const DraggableCardView: React.FC<DraggableCardViewProps> = React.memo(pr
             ...combined,
             height: isDragging ? combined.height : (combined.height as number) - grid,
             marginBottom: grid,
-            padding: '0 7px'
+            padding: '0 7px',
+            outline: 'none'
         }
     }, [provided.draggableProps.style, style, isDragging])
 
