@@ -75,7 +75,8 @@ export const StepView: React.FC<StepViewProps> = React.memo(props => {
             </div >
             {
                 canCreateCard &&
-                <CreateCardArea stepId={step.id}
+                <CreateCardArea streamId={streamId}
+                    stepId={step.id}
                     showCreateBox={showCreateBox}
                     onSave={onCreateCard}
                     onCancel={onCancelCreate}
@@ -150,13 +151,6 @@ const MenuItem = styled.li`
     }
 `
 
-// const Separator = styled.li`
-//     border-top: 1px solid #e5e5e5;
-//     margin: 2px 5px;
-//     display: block;
-//     list-style: none;
-//     height: 0;
-// `
 
 const Wrapper = styled.div`
     width: 240px;

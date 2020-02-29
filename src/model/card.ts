@@ -1,3 +1,5 @@
+import { UserBaseInfo } from "./user";
+
 export interface TimePoint {
     stepId: string,
     timeStamp: number
@@ -7,7 +9,7 @@ export interface CardInfo {
     title: string,
     stepId: string,
     describe?: string,
-    participants?: string[],
+    participants?: UserBaseInfo[],
     timeLine?: TimePoint[],
     priority?: string,
     position: number /** position 决定卡片前后顺序 */

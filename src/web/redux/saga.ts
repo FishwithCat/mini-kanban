@@ -17,6 +17,7 @@ function* rootSaga() {
         takeLatest(valueStreamActionKeys.updateStep, valueStreamSaga.updateStep),
         takeLatest(valueStreamActionKeys.deleteStep, valueStreamSaga.deleteStep),
         takeLatest(valueStreamActionKeys.inviteMember, valueStreamSaga.inviteMember),
+        takeLatest(valueStreamActionKeys.deleteMember, valueStreamSaga.deleteMember),
 
         takeLatest(cardsActionKeys.createCard, cardsSaga.createCard),
         takeEvery(cardsActionKeys.fetchCardsOfStep, cardsSaga.fetchCardsOfStep),

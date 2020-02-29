@@ -7,6 +7,10 @@ import { EmptyArray } from '@/model/empty';
 import md5 from 'md5';
 import { User } from '@/model/user';
 
+/**
+ * valueStream 返回的成员列表，必须保证第一个是 creator
+ */
+
 const valueStreamRouter = new router()
 valueStreamRouter.prefix('/api/valueStream')
 
@@ -19,11 +23,9 @@ valueStreamRouter.get('/:id', async (ctx, next) => {
 valueStreamRouter.get('/members/:id', async (ctx, next) => {
     const { id: streamId } = ctx.params
     const vsDomain = ValueStreamDomain.getInstance()
-    const usersDomain = UsersDomain.getInstance()
     const streamInfo: ValueStream = await vsDomain.getValueStream(streamId)
     const { creator, members } = streamInfo
-    const userIdList = [creator].concat(members ?? EmptyArray)
-    const membersInfo = await usersDomain.getUsersInfo(userIdList)
+    const membersInfo = await getUserInfoList([creator].concat(members ?? EmptyArray))
     ctx.body = {
         id: streamId,
         members: membersInfo
@@ -85,12 +87,34 @@ valueStreamRouter.put('/invite', async (ctx, next) => {
     }
     const newValueStream = await vsDomain.updateMembers(streamId, newMemberId)
     const { members, creator } = newValueStream
-    const membersInfo = await usersDomain.getUsersInfo([creator].concat(members ?? EmptyArray))
+    const membersInfo = await getUserInfoList([creator].concat(members ?? EmptyArray))
     ctx.body = {
         id: streamId,
         members: membersInfo
     }
-
 })
+
+valueStreamRouter.put('/delete-member', async (ctx, next) => {
+    const { id: streamId, memberId } = ctx.request.body
+    const vsDomain = ValueStreamDomain.getInstance()
+    const newValueStream = await vsDomain.deleteMember(streamId, memberId)
+    const { members, creator } = newValueStream
+    const membersInfo = await getUserInfoList([creator].concat(members ?? EmptyArray))
+    ctx.body = {
+        id: streamId,
+        members: membersInfo
+    }
+})
+
+const getUserInfoList = async (userIdList: string[]) => {
+    const usersDomain = UsersDomain.getInstance()
+    const membersInfo: User[] = await usersDomain.getUsersInfo(userIdList)
+    let result: User[] = []
+    userIdList.forEach(id => {
+        const info = membersInfo.find(item => item.id === id)
+        if (info) result = result.concat(info)
+    })
+    return result
+}
 
 export default valueStreamRouter

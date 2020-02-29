@@ -19,5 +19,6 @@ export default {
     setModifiedStep: 'SET_MODIFIED_STEP',
 
     inviteMember: 'INVITE_MEMBER',
-    inviteMemberSuccess: 'INVITE_MEMBER_SUCCESS',
+    deleteMember: 'DELETE_MEMBER',
+    updateMemberSuccess: 'UPDATE_MEMBER_SUCCESS',
 }

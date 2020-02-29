@@ -122,7 +122,7 @@ const Wrapper = styled.div`
                 line-height: 32px;
                 white-space: nowrap;
                 text-align: center;
-                margin: 0 20px;
+                margin: 0 50px;
                 color: #ddd;
                 transition: color .3s ease-out;
                 cursor: pointer;

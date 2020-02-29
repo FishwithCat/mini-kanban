@@ -64,6 +64,12 @@ class ValueStreamDomain {
         members = immutableUpdateList(members, newMemberId)
         return (await this.dbHandler).find({ id: valueStreamId }).set(`members`, members).write()
     }
+
+    deleteMember = async (valueStreamId: string, memberId: string) => {
+        let members: string[] = await (await this.dbHandler).find({ id: valueStreamId }).get('members').value()
+        members = members.filter(item => item !== memberId)
+        return (await this.dbHandler).find({ id: valueStreamId }).set(`members`, members).write()
+    }
 }
 
 export default ValueStreamDomain

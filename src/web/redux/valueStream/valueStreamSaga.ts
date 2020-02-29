@@ -10,7 +10,8 @@ import {
     FetchValueStreamMembersPayload,
     fetchValueStreamMembersSuccess,
     InviteMemberPayload,
-    inviteMemberSuccess,
+    updateMemberSuccess,
+    DeleteMemberPayload,
 
 } from './valueStreamActions';
 
@@ -119,7 +120,23 @@ function* inviteMember(action: TypedAction<InviteMemberPayload>) {
 
         if (result && result.id) {
             const { id, members } = result
-            yield put(inviteMemberSuccess(id, members))
+            yield put(updateMemberSuccess(id, members))
+        }
+    } catch (error) {
+
+    }
+}
+
+function* deleteMember(action: TypedAction<DeleteMemberPayload>) {
+    const payload = action.payload!
+    const { streamId, memberId } = payload
+    try {
+        const result = yield call(action => {
+            return ValueStreamApi.deleteMember(streamId, memberId)
+        }, null)
+        if (result && result.id) {
+            const { id, members } = result
+            yield put(updateMemberSuccess(id, members))
         }
     } catch (error) {
 
@@ -133,5 +150,6 @@ export default {
     deleteValueStream,
     updateStep,
     deleteStep,
-    inviteMember
+    inviteMember,
+    deleteMember
 }

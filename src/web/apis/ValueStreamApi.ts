@@ -43,3 +43,10 @@ export const inviteMember = (streamId: string, memberName: string) => {
         memberName
     }).then(res => res.data)
 }
+
+export const deleteMember = (streamId: string, memberId: string) => {
+    return Request.put(`/valueStream/delete-member`, {
+        id: streamId,
+        memberId
+    }).then(res => res.data)
+}

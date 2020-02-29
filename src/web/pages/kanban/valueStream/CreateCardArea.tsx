@@ -2,23 +2,31 @@ import React from 'react';
 import styled from 'styled-components';
 import { Textarea } from '@/web/components/TextArea';
 import { CardInfo } from '@/model/card';
+import { UserBaseInfo } from '@/model/user';
+import { useValueStreamMembers } from '@/web/hooks/useValueStreamMembers';
+import { EmptyArray } from '@/model/empty';
+import { Chip } from '@material-ui/core';
+import { MemberTag } from '../components/MemberTag';
 
 
 interface CreateCardAreaProps {
+    streamId: string,
     stepId: string,
     showCreateBox: boolean,
     onSave(card: CardInfo): void,
     onCancel(): void
 }
 export const CreateCardArea: React.FC<CreateCardAreaProps> = React.memo(props => {
-    const { stepId, showCreateBox, onSave, onCancel } = props
+    const { streamId, stepId, showCreateBox, onSave, onCancel } = props
+    const members = useValueStreamMembers(streamId)
 
 
     const onCreateCard = React.useCallback(
-        (title: string) => {
+        (title: string, participants: UserBaseInfo[]) => {
             onSave({
                 title,
                 stepId,
+                participants,
                 position: new Date().valueOf()
             })
         },
@@ -26,7 +34,10 @@ export const CreateCardArea: React.FC<CreateCardAreaProps> = React.memo(props =>
     )
 
     return showCreateBox ?
-        <CreateCardBox onCancel={onCancel} onSave={onCreateCard} />
+        <CreateCardBox members={members ?? EmptyArray}
+            onCancel={onCancel}
+            onSave={onCreateCard}
+        />
         :
         null
 })
@@ -34,11 +45,15 @@ export const CreateCardArea: React.FC<CreateCardAreaProps> = React.memo(props =>
 
 
 interface CreateCardBoxProps {
+    members: UserBaseInfo[]
     onCancel(): void,
-    onSave(title: string): void
+    onSave(title: string, participants: UserBaseInfo[]): void
 }
 const CreateCardBox: React.FC<CreateCardBoxProps> = React.memo(props => {
+    const { members } = props
     const [title, setTitle] = React.useState('')
+    const [participants, setParticipants] = React.useState<UserBaseInfo[]>([])
+
 
     const onTitleChange = React.useCallback(
         e => {
@@ -49,14 +64,20 @@ const CreateCardBox: React.FC<CreateCardBoxProps> = React.memo(props => {
 
     const onSaveCard = React.useCallback(
         () => {
-            props.onSave(title)
+            props.onSave(title, participants)
         },
-        [title, props.onSave]
+        [title, participants, props.onSave]
     )
 
+    const isSavedAble = () => {
+        return title !== '' && title != null
+    }
 
     return (
         <CreateCardBoxWrapper className="create-card-box">
+            <div className="title">
+                标题
+            </div>
             <Textarea
                 value={title}
                 onChange={onTitleChange}
@@ -65,9 +86,16 @@ const CreateCardBox: React.FC<CreateCardBoxProps> = React.memo(props => {
                 aria-label="maximum height"
                 autoFocus
             />
+            <div className="title">
+                负责人
+            </div>
+            <MemberTag members={members}
+                participants={participants}
+                onChange={setParticipants}
+            />
             <div className="actions">
-                <div className="button save" onClick={onSaveCard}>保存</div>
-                <div className="button cancel" onClick={props.onCancel}>取消</div>
+                <div className={`button save ${isSavedAble() ? '' : 'disabled'}`} onClick={onSaveCard}>保 存</div>
+                <div className="button cancel" onClick={props.onCancel}>取 消</div>
             </div>
         </CreateCardBoxWrapper>
     )
@@ -75,15 +103,18 @@ const CreateCardBox: React.FC<CreateCardBoxProps> = React.memo(props => {
 
 
 const CreateCardBoxWrapper = styled.div`
-    padding: 15px 10px 6px;
+    padding: 10px;
     background-color: #fff;
     margin: 7px 7px 0;
     border-radius: 4px;
     box-shadow: 0 1px 2px 0px rgba(0, 0, 0, .1);
 
+    .title {
+        margin-bottom: 5px;
+    }
 
     > .actions {
-        margin-top: 4px;
+        margin-top: 6px;
 
         &:after {
             content: '';
@@ -104,9 +135,14 @@ const CreateCardBoxWrapper = styled.div`
                 background-color: #2196f3;
                 color: #fff;
                 border-radius: 2px;
-                transition: background-color .2s ease-out;
+                transition: all .2s ease-out;
 
-                &:hover {
+                &.disabled {
+                    background-color: #e0e0e0;
+                    color: rgba(0, 0, 0, 0.26);
+                }
+
+                &:not(.disabled):hover {
                     background-color: #1769AA;
                 }
             }

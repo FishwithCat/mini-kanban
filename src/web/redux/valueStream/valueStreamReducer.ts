@@ -1,7 +1,12 @@
 import valueStreamActionKeys from "./valueStreamActionKeys";
 import { Reducer } from "redux";
 import { TypedAction } from "@/model/action";
-import { CreateValueStreamSuccessPayload, FetchValueStreamSuccessPayload, DeleteValueStreamSuccessPayload, UpdateStepsSuccessPayload, SetModifiedStepPayload, FetchValueStreamMembersSuccessPayload, InviteMemberSuccessPayload } from "./valueStreamActions";
+import {
+    CreateValueStreamSuccessPayload, FetchValueStreamSuccessPayload,
+    DeleteValueStreamSuccessPayload, UpdateStepsSuccessPayload,
+    SetModifiedStepPayload, FetchValueStreamMembersSuccessPayload,
+    UpdateMemberSuccessPayload
+} from "./valueStreamActions";
 import { ValueStream, ValueStreamStruct, Step } from "@/model/ValueStream";
 import { ModalPosition } from "@/model/position";
 import { UserBaseInfo } from "@/model/user";
@@ -36,8 +41,8 @@ export const valueStreamReducer: Reducer<ValueStreamState, TypedAction> = (state
             return handleUpdateStepsSuccess(state, action.payload)
         case valueStreamActionKeys.setModifiedStep:
             return handleSetModifiedStep(state, action.payload)
-        case valueStreamActionKeys.inviteMemberSuccess:
-            return handleInviteMemberSuccess(state, action.payload)
+        case valueStreamActionKeys.updateMemberSuccess:
+            return handleUpdateMemberSuccess(state, action.payload)
         default:
             return state
     }
@@ -64,7 +69,6 @@ const handleFetchValueStreamMembersSuccess = (state: ValueStreamState, payload: 
 
 const handleCreateValueStreamSuccess = (state: ValueStreamState, payload: CreateValueStreamSuccessPayload) => {
     const { valueStream } = payload
-    const { id } = valueStream
     return {
         ...state,
         valueStreamStructMap: _updateValueStream(state.valueStreamStructMap, valueStream),
@@ -118,7 +122,7 @@ const handleSetModifiedStep = (state: ValueStreamState, payload: SetModifiedStep
     }
 }
 
-const handleInviteMemberSuccess = (state: ValueStreamState, payload: InviteMemberSuccessPayload) => {
+const handleUpdateMemberSuccess = (state: ValueStreamState, payload: UpdateMemberSuccessPayload) => {
     const { streamId, members } = payload
     const vsMemberMap = { ...state.vsMemberMap }
     vsMemberMap[streamId] = members

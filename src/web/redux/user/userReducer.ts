@@ -80,6 +80,7 @@ const handleCreateKanbanSuccess = (state: UserState, payload: CreateValueStreamS
     availableStreamMap[userId] = availableList
     return {
         ...state,
+        activeStreamId: streamId,
         availableStreamMap
     }
 }

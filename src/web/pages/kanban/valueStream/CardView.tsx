@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from '@/model/card';
 import styled from 'styled-components';
 import { DraggableProvided, DraggingStyle } from 'react-beautiful-dnd';
+import { EmptyArray } from '@/model/empty';
 
 interface CardViewProps {
     card: Card
@@ -12,6 +13,11 @@ export const CardView: React.FC<CardViewProps> = React.memo(props => {
     return (
         <Wrapper className="card-view">
             <div className="title">{card.title}</div>
+            <div>{
+                (card.participants ?? EmptyArray).map(member => {
+                    return <span style={{ float: 'left' }}>{member.name}</span>
+                })
+            }</div>
         </Wrapper>
     )
 })
@@ -63,5 +69,7 @@ const Wrapper = styled.div`
 
     .title {
         padding: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 `

@@ -109,11 +109,20 @@ export const inviteMember = (streamId: string, memberName: string): TypedAction<
     payload: { streamId, memberName }
 })
 
-export interface InviteMemberSuccessPayload {
+export interface DeleteMemberPayload {
+    streamId: string,
+    memberId: string
+}
+export const deleteMember = (streamId: string, memberId: string): TypedAction<DeleteMemberPayload> => ({
+    type: valueStreamActionKeys.deleteMember,
+    payload: { streamId, memberId }
+})
+
+export interface UpdateMemberSuccessPayload {
     streamId: string,
     members: UserBaseInfo[]
 }
-export const inviteMemberSuccess = (streamId: string, members: UserBaseInfo[]): TypedAction<InviteMemberSuccessPayload> => ({
-    type: valueStreamActionKeys.inviteMemberSuccess,
+export const updateMemberSuccess = (streamId: string, members: UserBaseInfo[]): TypedAction<UpdateMemberSuccessPayload> => ({
+    type: valueStreamActionKeys.updateMemberSuccess,
     payload: { streamId, members }
 })

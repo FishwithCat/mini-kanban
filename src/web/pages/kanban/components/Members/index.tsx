@@ -5,7 +5,7 @@ import { Separator } from '@/web/components/Separator';
 import { UserBaseInfo } from '@/model/user';
 import { useCurrentUser } from '@/web/hooks/useCurrentUser';
 import { useDispatch } from 'react-redux';
-import { inviteMember } from '@/web/redux/valueStream/valueStreamActions';
+import { inviteMember, deleteMember } from '@/web/redux/valueStream/valueStreamActions';
 
 const COLORS = ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#F78DA7', '#9900EF']
 
@@ -33,6 +33,10 @@ export const Members: React.FC<MembersProps> = React.memo(props => {
     const onInviteMember = () => {
         if (!isCreator || filter === '' || filter == undefined) return
         dispatch(inviteMember(streamId, filter))
+    }
+
+    const onDeleteMember = (memberId: string) => {
+        dispatch(deleteMember(streamId, memberId))
     }
 
     const membersModalStyle = React.useMemo(() => {
@@ -68,6 +72,8 @@ export const Members: React.FC<MembersProps> = React.memo(props => {
                             return (
                                 <MemberInfo key={member.id} member={member}
                                     color={COLORS[index % COLORS.length]}
+                                    canDelete={member.id !== members![0].id}
+                                    onDelete={onDeleteMember}
                                 />
                             )
                         })
@@ -79,10 +85,12 @@ export const Members: React.FC<MembersProps> = React.memo(props => {
 
 interface MemberInfoProps {
     member: UserBaseInfo,
-    color: string
+    color: string,
+    canDelete: boolean,
+    onDelete(memberId: string): void
 }
 const MemberInfo: React.FC<MemberInfoProps> = React.memo(props => {
-    const { member, color } = props
+    const { member, color, canDelete, onDelete } = props
     const name = member.name
 
     return (
@@ -93,6 +101,12 @@ const MemberInfo: React.FC<MemberInfoProps> = React.memo(props => {
             <div className="full">
                 {member.name}
             </div>
+            {
+                canDelete &&
+                <i className="delete-member iconfont icon-delete"
+                    onClick={() => onDelete(member.id)}
+                />
+            }
         </MemberInfoWrapper>
     )
 })
@@ -102,8 +116,16 @@ const MemberInfoWrapper = styled.div`
     height: 42px;
     padding: 5px 10px;
 
+    .delete-member {
+        display: none;
+    }
+
     &:hover {
         background-color: #f0f0f0;
+        
+        .delete-member {
+            display: inline-block;
+        }
     }
 
     .avatar {
@@ -120,6 +142,14 @@ const MemberInfoWrapper = styled.div`
         padding: 0 10px;
     }
 
+    .delete-member {
+        line-height: 32px;
+        width: 32px;
+        margin-left: 10px;
+        text-align: center;
+        cursor: pointer;
+        color: #f44336;
+    }
 `
 
 const MembersWrapper = styled.div`

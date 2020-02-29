@@ -4,7 +4,7 @@
     "author": "FishWithCat",
     "license": "MIT",
     "scripts": {
-        "web": "ENV=development webpack-dev-server --config ./webpack.web.development.js --port=3000",
+        "web": "ENV=development webpack-dev-server --config ./webpack.web.development.js --host=0.0.0.0 --port=3000",
         "server": "webpack --config ./webpack.main.js",
         "build": "webpack --config ./webpack.config.js",
         "run-electron": "electron .webpack/main.js"
