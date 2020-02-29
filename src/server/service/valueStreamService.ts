@@ -74,14 +74,18 @@ valueStreamRouter.put('/invite', async (ctx, next) => {
     const { id: streamId, memberName } = ctx.request.body
     const vsDomain = ValueStreamDomain.getInstance()
     const usersDomain = UsersDomain.getInstance()
+    const newMemberId = md5(memberName)
+    const userInfo = await usersDomain.getUserInfo(newMemberId)
+    if (!userInfo) {
+        await usersDomain.createUser({ id: newMemberId, name: memberName })
+    }
     const streamInfo: ValueStream = await vsDomain.getValueStream(streamId)
     if (!streamInfo?.id) {
         return ctx.body = {}
     }
-    const newMemberId = md5(memberName)
     const newValueStream = await vsDomain.updateMembers(streamId, newMemberId)
-    const { members } = newValueStream
-    const membersInfo = await usersDomain.getUsersInfo(members)
+    const { members, creator } = newValueStream
+    const membersInfo = await usersDomain.getUsersInfo([creator].concat(members ?? EmptyArray))
     ctx.body = {
         id: streamId,
         members: membersInfo

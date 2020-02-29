@@ -26,8 +26,12 @@ export const Members: React.FC<MembersProps> = React.memo(props => {
         return (members ?? []).filter(member => member.name.indexOf(filter) >= 0).length === 0
     }, [filter, members])
 
+    const isCreator = React.useMemo(() => {
+        return members && currentUser?.id == members[0].id
+    }, [members, currentUser?.id])
+
     const onInviteMember = () => {
-        if (!members || currentUser?.id !== members[0].id) return
+        if (!isCreator || filter === '' || filter == undefined) return
         dispatch(inviteMember(streamId, filter))
     }
 
@@ -51,7 +55,7 @@ export const Members: React.FC<MembersProps> = React.memo(props => {
             <div className="search-box">
                 <input className="search-input" value={filter} onChange={e => setFilter(e.target.value)} />
                 {
-                    members && (currentUser?.id === members[0].id) &&
+                    isCreator &&
                     <i className={filterResultIsNull ? "iconfont icon-adduser" : "disabled iconfont icon-adduser"}
                         onClick={onInviteMember}
                     />

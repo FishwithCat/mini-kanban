@@ -18,7 +18,7 @@ class CardsDomain {
     }
 
     createCard = async (newCard: Card) => {
-        const cards = (await this.dbHandler).value()
+        // const cards = (await this.dbHandler).value()
         return (await this.dbHandler).push(newCard).write()
     }
 
