@@ -11,7 +11,11 @@ export const login = (name: string): TypedAction<LoginPayload> => ({
     payload: { name }
 })
 
-export type LoginSuccessPayload = User
+export interface LoginSuccessPayload {
+    id: string,
+    name: string,
+    available: ValueStreamBaseInfo[]
+}
 export const loginSuccess = (id: string, name: string, available: ValueStreamBaseInfo[]): TypedAction<LoginSuccessPayload> => ({
     type: userActionKeys.loginSuccess,
     payload: { id, name, available }

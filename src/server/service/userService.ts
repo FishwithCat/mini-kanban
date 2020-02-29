@@ -3,6 +3,7 @@ import ValueStreamDomain from '../domain/ValueStreamDomain';
 import UsersDomain from '../domain/UserDomain';
 import md5 from 'md5';
 import { User } from '@/model/user';
+import { EmptyArray } from '@/model/empty';
 
 
 const userRouter = new router()
@@ -31,9 +32,9 @@ userRouter.post('/login', async (ctx, next) => {
             available: availableList
         }
     } else {
-        const newUser: User = { id, name, available: [] }
+        const newUser: User = { id, name }
         await userDomain.createUser(newUser)
-        return ctx.body = newUser
+        return ctx.body = { ...newUser, available: EmptyArray }
     }
 })
 

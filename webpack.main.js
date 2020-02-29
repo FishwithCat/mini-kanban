@@ -18,6 +18,10 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 exclude: /(node_modules|\.webpack)/,
+                include: [
+                    path.resolve(__dirname, './src/server'),
+                    path.resolve(__dirname, './src/model')
+                ],
                 use: {
                     loader: 'ts-loader'
                 }

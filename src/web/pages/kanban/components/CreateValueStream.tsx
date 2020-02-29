@@ -5,16 +5,16 @@ import { User } from '@/model/user';
 import { ValueStreamStruct } from '@/model/ValueStream';
 import styled from 'styled-components';
 
-interface CreateKanbanProps {
+interface CreateValueStreamProps {
     user: User | null
 }
-export const CreateKanban: React.FC<CreateKanbanProps> = React.memo(props => {
+export const CreateValueStream: React.FC<CreateValueStreamProps> = React.memo(props => {
     const { user } = props
 
     const dispatch = useDispatch()
 
 
-    const onCreateKanban = React.useCallback(() => {
+    const onCreateValueStream = React.useCallback(() => {
         if (!user?.id) return
         const newStream: ValueStreamStruct = {
             name: '新看板',
@@ -25,9 +25,9 @@ export const CreateKanban: React.FC<CreateKanbanProps> = React.memo(props => {
 
     return (
         <Wrapper className="create-new-kanban">
-            {/* <div onClick={onCreateKanban}> */}
+            {/* <div onClick={onCreateValueStream}> */}
             <i className="create-btn iconfont icon-appstoreadd"
-                onClick={onCreateKanban}
+                onClick={onCreateValueStream}
             />
             {/* <div> 新建看板 </div> */}
             {/* </div> */}

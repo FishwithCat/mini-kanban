@@ -1,6 +1,7 @@
 import { createDbHandler } from '../infrastructure/db';
 import { ValueStream, Step } from '@/model/ValueStream';
 import { EmptyArray } from '@/model/empty';
+import { immutableUpdateList, immutableUpdateObjList } from '@/model/utils';
 
 
 /**
@@ -39,12 +40,7 @@ class ValueStreamDomain {
 
     updateValueStreamStep = async (id: string, newStep: Step) => {
         let steps: Step[] = await (await this.dbHandler).find({ id }).get(`steps`).value()
-        const modifiedIndex = steps.findIndex(step => step.id === newStep.id)
-        if (modifiedIndex < 0) {
-            return (await this.dbHandler).find({ id }).set(`steps`, steps.concat(newStep)).write()
-        }
-        steps = steps.slice(0, modifiedIndex).concat(newStep)
-            .concat(steps.slice(modifiedIndex + 1))
+        steps = immutableUpdateObjList(steps, newStep, 'id')
         return (await this.dbHandler).find({ id }).set(`steps`, steps).write()
     }
 
@@ -57,9 +53,16 @@ class ValueStreamDomain {
 
     getAvailableValueStreamOfUser = async (userId: string) => {
         return (await this.dbHandler)
-            .filter((valueStream: ValueStream) => (valueStream.members ?? EmptyArray).indexOf(userId) > 0 || valueStream.creator === userId)
+            .filter((valueStream: ValueStream) => (valueStream.members ?? EmptyArray).indexOf(userId) >= 0 || valueStream.creator === userId)
             .map((valueStream: ValueStream) => ({ id: valueStream.id, name: valueStream.name })).value()
 
+    }
+
+    updateMembers = async (valueStreamId: string, newMemberId: string) => {
+        let members: string[] = await (await this.dbHandler).find({ id: valueStreamId }).get(`members`).value()
+        if (!members) return
+        members = immutableUpdateList(members, newMemberId)
+        return (await this.dbHandler).find({ id: valueStreamId }).set(`members`, members).write()
     }
 }
 

@@ -7,6 +7,10 @@ import {
     DeleteValueStreamPayload, deleteValueStreamSuccess,
     DeleteStepPayload, UpdateStepPayload,
     updateStepsSuccess,
+    FetchValueStreamMembersPayload,
+    fetchValueStreamMembersSuccess,
+    InviteMemberPayload,
+    inviteMemberSuccess,
 
 } from './valueStreamActions';
 
@@ -19,8 +23,24 @@ function* fetchValueStream(action: TypedAction<FetchValueStreamPayload>) {
             return ValueStreamApi.fetchValueStream(kanbanId)
         }, null)
         if (result && result.id) {
-            const { id, name, steps } = result
-            yield put(fetchValueStreamSuccess({ id, name, steps }))
+            const { id, name, steps, creator } = result
+            yield put(fetchValueStreamSuccess({ id, name, steps, creator }))
+        }
+    } catch (error) {
+
+    }
+}
+
+function* fetchValueStreamMembers(action: TypedAction<FetchValueStreamMembersPayload>) {
+    const payload = action.payload!
+    const { streamId } = payload
+    try {
+        const result = yield call((action) => {
+            return ValueStreamApi.fetchValueStreamMembers(streamId)
+        }, null)
+        if (result && result.id) {
+            const { members } = result
+            yield put(fetchValueStreamMembersSuccess(streamId, members))
         }
     } catch (error) {
 
@@ -35,7 +55,7 @@ function* createValueStream(action: TypedAction<CreateValueStreamPayload>) {
             return ValueStreamApi.createValueStream(userId, valueStreamStruct)
         }, null)
         if (result && result.id) {
-            yield put(createValueStreamSuccess(result))
+            yield put(createValueStreamSuccess(userId, result))
         }
     } catch (error) {
 
@@ -89,10 +109,29 @@ function* deleteStep(action: TypedAction<DeleteStepPayload>) {
     }
 }
 
+function* inviteMember(action: TypedAction<InviteMemberPayload>) {
+    const payload = action.payload!
+    const { streamId, memberName } = payload
+    try {
+        const result = yield call(action => {
+            return ValueStreamApi.inviteMember(streamId, memberName)
+        }, null)
+
+        if (result && result.id) {
+            const { id, members } = result
+            yield put(inviteMemberSuccess(id, members))
+        }
+    } catch (error) {
+
+    }
+}
+
 export default {
     fetchValueStream,
+    fetchValueStreamMembers,
     createValueStream,
     deleteValueStream,
     updateStep,
     deleteStep,
+    inviteMember
 }

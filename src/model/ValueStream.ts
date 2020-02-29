@@ -10,7 +10,7 @@ export interface ValueStreamStruct {
 export interface ValueStream extends ValueStreamStruct {
     id: string,
     members?: string[],
-    creator?: string
+    creator: string
 }
 
 export interface Step {

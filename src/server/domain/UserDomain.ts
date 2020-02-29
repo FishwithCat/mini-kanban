@@ -31,6 +31,10 @@ class UsersDomain {
         return (await this.dbHandler).find({ id: userId }).value()
     }
 
+    getUsersInfo = async (userIdList: string[]) => {
+        return (await this.dbHandler).filter((user: User) => userIdList.includes(user.id)).value()
+    }
+
     createUser = async (userInfo: User) => {
         return (await this.dbHandler).push(userInfo).write()
     }

@@ -11,10 +11,12 @@ function* rootSaga() {
         takeLatest(userActionKeys.login, userSaga.login),
 
         takeLatest(valueStreamActionKeys.fetchValueStream, valueStreamSaga.fetchValueStream),
+        takeLatest(valueStreamActionKeys.fetchValueStreamMembers, valueStreamSaga.fetchValueStreamMembers),
         takeLatest(valueStreamActionKeys.createValueStream, valueStreamSaga.createValueStream),
         takeLatest(valueStreamActionKeys.deleteValueStream, valueStreamSaga.deleteValueStream),
-        takeEvery(valueStreamActionKeys.updateStep, valueStreamSaga.updateStep),
+        takeLatest(valueStreamActionKeys.updateStep, valueStreamSaga.updateStep),
         takeLatest(valueStreamActionKeys.deleteStep, valueStreamSaga.deleteStep),
+        takeLatest(valueStreamActionKeys.inviteMember, valueStreamSaga.inviteMember),
 
         takeLatest(cardsActionKeys.createCard, cardsSaga.createCard),
         takeEvery(cardsActionKeys.fetchCardsOfStep, cardsSaga.fetchCardsOfStep),

@@ -16,7 +16,7 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js', '.json'], // 必须增加 extensions 支持 ts 解析
         modules: ["node_modules", path.resolve(__dirname)], // 确定加载的基础路径
         alias: {
-            '@': path.resolve(__dirname, './src'), // 路径别名
+            '@': path.resolve(__dirname, './src'), // 路径别名,
         }
     },
     entry: {
@@ -39,7 +39,8 @@ module.exports = {
                 test: /\.tsx?$/,
                 exclude: /node_modules/, // 不解析 node_modules
                 include: [
-                    path.resolve(__dirname, './src/web')
+                    path.resolve(__dirname, './src/web'),
+                    path.resolve(__dirname, './src/model')
                 ],
                 loader: 'ts-loader'
             },

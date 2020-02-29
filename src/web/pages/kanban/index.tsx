@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { AppSideBar } from '@/web/components/AppSideBar';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/web/redux/create-store';
 import { useCurrentUser } from '@/web/hooks/useCurrentUser';
-import { CreateKanban } from './components/CreateKanban';
+import { CreateValueStream } from './components/CreateValueStream';
 import { ValueStream } from './valueStream';
-import { Menu } from './menu';
+import { useAvailableStreams } from '@/web/hooks/useAvailableStreams';
+
 
 interface KanbanProps {
 
@@ -15,6 +16,7 @@ export const Kanban: React.FC<KanbanProps> = React.memo(props => {
 
     // const dispatch = useDispatch()
     const currentUser = useCurrentUser()
+    const availableStream = useAvailableStreams(currentUser?.id)
 
     const activeKanbanId = useSelector((state: RootState) => state.userReducer.activeStreamId)
 
@@ -22,19 +24,14 @@ export const Kanban: React.FC<KanbanProps> = React.memo(props => {
         <KanbanWrapper>
             <AppSideBar />
             {
-                currentUser?.available.length == 0 ?
-                    <CreateKanban user={currentUser} />
+                availableStream.length == 0 ?
+                    <CreateValueStream user={currentUser} />
                     :
-                    <>
-                        {/* <Menu /> */}
-
-                        <div className="content">
-                            {
-                                activeKanbanId && <ValueStream id={activeKanbanId} />
-
-                            }
-                        </div>
-                    </>
+                    <div className="content">
+                        {
+                            activeKanbanId && <ValueStream id={activeKanbanId} />
+                        }
+                    </div>
             }
         </KanbanWrapper>
     )
@@ -56,7 +53,5 @@ const KanbanWrapper = styled.div`
 
     .content {
         flex: 1;
-        padding: 10px;
-        overflow-x: auto;
     }
 `

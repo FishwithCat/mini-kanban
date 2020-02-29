@@ -1,12 +1,15 @@
 import valueStreamActionKeys from "./valueStreamActionKeys";
 import { Reducer } from "redux";
 import { TypedAction } from "@/model/action";
-import { CreateValueStreamSuccessPayload, FetchValueStreamSuccessPayload, DeleteValueStreamSuccessPayload, SetModifiedStepPayload, UpdateStepsSuccessPayload } from "./valueStreamActions";
+import { CreateValueStreamSuccessPayload, FetchValueStreamSuccessPayload, DeleteValueStreamSuccessPayload, UpdateStepsSuccessPayload, SetModifiedStepPayload, FetchValueStreamMembersSuccessPayload, InviteMemberSuccessPayload } from "./valueStreamActions";
 import { ValueStream, ValueStreamStruct, Step } from "@/model/ValueStream";
 import { ModalPosition } from "@/model/position";
+import { UserBaseInfo } from "@/model/user";
+import { immutableUpdateList, immutableUpdateObjList } from "@/model/utils";
 
 export interface ValueStreamState {
     valueStreamStructMap: Record<string, ValueStreamStruct>,
+    vsMemberMap: Record<string, UserBaseInfo[]>,
     modifiedStep: {
         data: Step | null,
         modalPosition?: ModalPosition
@@ -15,6 +18,7 @@ export interface ValueStreamState {
 
 const initState = {
     valueStreamStructMap: {},
+    vsMemberMap: {},
     modifiedStep: null
 }
 
@@ -22,6 +26,8 @@ export const valueStreamReducer: Reducer<ValueStreamState, TypedAction> = (state
     switch (action.type) {
         case valueStreamActionKeys.fetchValueStreamSuccess:
             return handleFetchValueStreamSuccess(state, action.payload)
+        case valueStreamActionKeys.fetchValueStreamMembersSuccess:
+            return handleFetchValueStreamMembersSuccess(state, action.payload)
         case valueStreamActionKeys.createValueStreamSuccess:
             return handleCreateValueStreamSuccess(state, action.payload)
         case valueStreamActionKeys.deleteValueStreamSuccess:
@@ -30,6 +36,8 @@ export const valueStreamReducer: Reducer<ValueStreamState, TypedAction> = (state
             return handleUpdateStepsSuccess(state, action.payload)
         case valueStreamActionKeys.setModifiedStep:
             return handleSetModifiedStep(state, action.payload)
+        case valueStreamActionKeys.inviteMemberSuccess:
+            return handleInviteMemberSuccess(state, action.payload)
         default:
             return state
     }
@@ -41,6 +49,16 @@ const handleFetchValueStreamSuccess = (state: ValueStreamState, payload: FetchVa
     return {
         ...state,
         valueStreamStructMap: _updateValueStream(state.valueStreamStructMap, valueStream)
+    }
+}
+
+const handleFetchValueStreamMembersSuccess = (state: ValueStreamState, payload: FetchValueStreamMembersSuccessPayload) => {
+    const { streamId, members } = payload
+    const vsMemberMap = { ...state.vsMemberMap }
+    vsMemberMap[streamId] = members
+    return {
+        ...state,
+        vsMemberMap
     }
 }
 
@@ -97,5 +115,15 @@ const handleSetModifiedStep = (state: ValueStreamState, payload: SetModifiedStep
             data: step,
             modalPosition
         }
+    }
+}
+
+const handleInviteMemberSuccess = (state: ValueStreamState, payload: InviteMemberSuccessPayload) => {
+    const { streamId, members } = payload
+    const vsMemberMap = { ...state.vsMemberMap }
+    vsMemberMap[streamId] = members
+    return {
+        ...state,
+        vsMemberMap
     }
 }

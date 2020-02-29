@@ -6,15 +6,20 @@ import { LoginSuccessPayload, SetActiveValueStreamPayload } from "./userActions"
 import valueStreamActionKeys from "../valueStream/valueStreamActionKeys";
 import { CreateValueStreamSuccessPayload, DeleteValueStreamSuccessPayload } from "../valueStream/valueStreamActions";
 import { listImmutableDelete } from "@/web/utils/immutable";
+import { ValueStreamBaseInfo } from "@/model/ValueStream";
+import { EmptyArray } from "@/model/empty";
+import { immutableUpdateList } from "@/model/utils";
 
 export interface UserState {
     currentUser: User | null,
     activeStreamId: string | null,
+    availableStreamMap: Record<string, ValueStreamBaseInfo[]>
 }
 
 const initState: UserState = {
     currentUser: null,
     activeStreamId: null,
+    availableStreamMap: {}
 }
 
 export const userReducer: Reducer<UserState, TypedAction> = (state = initState, action) => {
@@ -37,14 +42,17 @@ export const userReducer: Reducer<UserState, TypedAction> = (state = initState, 
 const handleLoginSuccess = (state: UserState, payload: LoginSuccessPayload) => {
     const { name, id, available } = payload
     if (!name) return state
+    const availableStreamMap = { ...state.availableStreamMap }
     let activeStreamId = null
     if (available.length > 0) {
         activeStreamId = available[0].id
     }
+    availableStreamMap[id] = available ?? EmptyArray
     return {
         ...state,
-        currentUser: { id, name, available },
-        activeStreamId
+        currentUser: { id, name },
+        activeStreamId,
+        availableStreamMap
     }
 }
 
@@ -65,33 +73,26 @@ const handleSetActiveKanban = (state: UserState, payload: SetActiveValueStreamPa
 
 const handleCreateKanbanSuccess = (state: UserState, payload: CreateValueStreamSuccessPayload) => {
     if (!state.currentUser) return state
-    const currentUser: User = { ...state.currentUser }
-    const { valueStream } = payload
-    const { id, name } = valueStream
-    const searchIndex = currentUser.available.findIndex(item => item.id === id)
-    if (searchIndex >= 0) return state
-    currentUser.available = currentUser.available.concat({ id, name })
+    const { userId, valueStream } = payload
+    const { id: streamId, name } = valueStream
+    const availableStreamMap = { ...state.availableStreamMap }
+    const availableList = immutableUpdateList(availableStreamMap[userId] ?? [], { id: streamId, name })
+    availableStreamMap[userId] = availableList
     return {
         ...state,
-        currentUser,
-        activeStreamId: id
+        availableStreamMap
     }
 }
 
 const handleDeleteKanbanSuccess = (state: UserState, payload: DeleteValueStreamSuccessPayload) => {
     if (!state.currentUser) return state
-    const currentUser: User = { ...state.currentUser }
     const { streamId } = payload
-    const deleteIndex = currentUser.available.findIndex(item => item.id === streamId)
-    if (deleteIndex < 0) return state
-    currentUser.available = listImmutableDelete(currentUser.available, deleteIndex)
-    let newActiveStreamId = null
-    if (currentUser.available.length > 0) {
-        newActiveStreamId = currentUser.available[0].id
+    const availableStreamMap = { ...state.availableStreamMap }
+    for (let userId in availableStreamMap) {
+        availableStreamMap[userId] = availableStreamMap[userId].filter(stream => stream.id !== streamId)
     }
     return {
         ...state,
-        activeStreamId: newActiveStreamId,
-        currentUser
+        availableStreamMap
     }
 }

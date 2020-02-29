@@ -11,6 +11,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Menu from '@material-ui/core/Menu';
 import Fade from '@material-ui/core/Fade';
 import { deleteStep, setModifiedStep } from '@/web/redux/valueStream/valueStreamActions';
+import { Separator } from '@/web/components/Separator';
 
 
 interface StepViewProps {
@@ -149,18 +150,19 @@ const MenuItem = styled.li`
     }
 `
 
-const Separator = styled.li`
-    border-top: 1px solid #e5e5e5;
-    margin: 2px 5px;
-    display: block;
-    list-style: none;
-    height: 0;
-`
+// const Separator = styled.li`
+//     border-top: 1px solid #e5e5e5;
+//     margin: 2px 5px;
+//     display: block;
+//     list-style: none;
+//     height: 0;
+// `
 
 const Wrapper = styled.div`
     width: 240px;
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
     margin: 0 5px;
     border-radius: 2px;
     overflow: hidden;

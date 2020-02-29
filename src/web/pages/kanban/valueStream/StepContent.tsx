@@ -36,7 +36,7 @@ export const StepContent: React.FC<StepContentProps> = React.memo(props => {
                                             className="scroll-list"
                                             height={height}
                                             itemCount={cards.length}
-                                            itemSize={60}
+                                            itemSize={68}
                                             width={width}
                                             outerRef={provided.innerRef}
                                             itemData={cards}

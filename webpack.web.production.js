@@ -31,7 +31,8 @@ module.exports = {
                 test: /\.tsx?$/,
                 exclude: /node_modules/, // 不解析 node_modules
                 include: [
-                    path.resolve(__dirname, './src/web')
+                    path.resolve(__dirname, './src/web'),
+                    path.resolve(__dirname, './src/model')
                 ],
                 loader: 'ts-loader'
             },
