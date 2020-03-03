@@ -1,6 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
-// import Modal from '@material-ui/core/Modal';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/web/redux/create-store';
 import { setModifiedStep, updateStep } from '@/web/redux/valueStream/valueStreamActions';

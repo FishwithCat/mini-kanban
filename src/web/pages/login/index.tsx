@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-// import Button from '@material-ui/core/Button';
 import logo from '@/web/images/logo.png';
 import { useDispatch } from 'react-redux';
 import { login } from '@/web/redux/user/userActions';

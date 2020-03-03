@@ -1,10 +1,6 @@
 import React from 'react';
 import { UserBaseInfo } from '@/model/user';
-// import Chip from '@material-ui/core/Chip';
 import styled from 'styled-components';
-// import withStyles from '@material-ui/core/styles/withStyles';
-// import Menu from '@material-ui/core/Menu';
-// import Fade from '@material-ui/core/Fade';
 import { immutableUpdateList, immutableDeleteFromList, immutableDeleteObjFromList, immutableUpdateObjList } from '@/model/utils';
 import { MChip } from '@/web/components/MChip';
 import { MDropDown } from '@/web/components/MDropdown';
@@ -92,10 +88,6 @@ const MemberTagWrapper = styled.div`
         margin-right: 8px;
         cursor: pointer;
     }
-
-    .MuiChip-root {
-        margin-right: 5px;
-    }
 `
 
 const StyledMenuItem = styled(MenuItem)`
@@ -105,30 +97,3 @@ const StyledMenuItem = styled(MenuItem)`
          transition: color .2s ease-out;
     }
 `
-
-// const MenuItem = styled.li`
-//     display: flex;
-//     cursor: pointer;
-//     outline: none;
-//     line-height: 32px;
-//     height: 32px;
-//     padding: 0 16px;
-
-//     &.danger {
-//         color: #f44336;
-//     }
-
-//     > i { 
-//         font-size: 14px;
-//         margin-right: 8px;
-//         transition: color .2s ease-out;
-//     }
-
-//     &:hover {
-//         background-color: #f7f7f7;
-
-//         &:not(.danger) i {
-//             color: #2196f3;
-//         }
-//     }
-// `

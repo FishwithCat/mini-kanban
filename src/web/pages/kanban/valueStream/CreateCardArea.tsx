@@ -5,7 +5,6 @@ import { CardInfo } from '@/model/card';
 import { UserBaseInfo } from '@/model/user';
 import { useValueStreamMembers } from '@/web/hooks/useValueStreamMembers';
 import { EmptyArray } from '@/model/empty';
-// import { Chip } from '@material-ui/core';
 import { MemberTag } from '../components/MemberTag';
 
 
