@@ -1,9 +1,9 @@
 import React from 'react';
 import { Step } from '@/model/ValueStream';
 import styled from 'styled-components';
-import { Input } from '@/web/components/Input'
 import { ColorPicker } from '@/web/components/ColorPicker';
-import Button from '@material-ui/core/Button';
+import { MButton } from '@/web/components/MButton';
+import { MInput } from '@/web/components/MInput';
 
 
 interface ModifyStepProps {
@@ -17,10 +17,8 @@ export const ModifyStep: React.FC<ModifyStepProps> = React.memo(props => {
 
     return (
         <Wrapper className="modify-step" style={style}>
-            <Input label="名称" value={step.name}
+            <MInput placeholder="名称" value={step.name}
                 onChange={e => setStep({ ...step, name: e.target.value })}
-                variant="outlined"
-                fullWidth
                 autoFocus
             />
             <div className="modify-color">
@@ -34,18 +32,16 @@ export const ModifyStep: React.FC<ModifyStepProps> = React.memo(props => {
             </div>
 
             <div className="bottom">
-                <Button
-                    variant="contained"
-                    color="primary"
-                    disableElevation
+                <MButton
+                    type="primary"
                     disabled={step.name === '' || step.name == null}
                     onClick={() => {
                         if (!step.id) return
                         return props.onSave(step)
                     }}
                 >
-                    保 存
-                </Button>
+                    应用
+                </MButton>
             </div>
         </Wrapper>
     )
@@ -53,10 +49,8 @@ export const ModifyStep: React.FC<ModifyStepProps> = React.memo(props => {
 
 const Wrapper = styled.div`
     outline: none;
-    background-color: #fff;
+    background-color: white;
     width: 250px;
-    padding: 20px;
-    border-radius: 4px;
     
     .form-title {
         margin-right: 8px;

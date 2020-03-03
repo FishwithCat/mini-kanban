@@ -42,7 +42,7 @@ export const Members: React.FC<MembersProps> = React.memo(props => {
     const membersModalStyle = React.useMemo(() => {
         if (!open) {
             return {
-                transform: `translateX(250px)`
+                transform: `translateX(280px)`
             }
         }
     }, [open])
@@ -162,11 +162,14 @@ const MembersWrapper = styled.div`
     background: #fafafa;
     z-index: 9;
     transition: transform .2s ease-out;
+    display: flex;
+    flex-direction: column;
 
     .head {
         font-size: 16px;
         padding: 10px 15px 8px;
         display: flex;
+        height: 41px;
         
         .title {
             letter-spacing: 1px;
@@ -199,10 +202,16 @@ const MembersWrapper = styled.div`
             outline: none;
             height: 32px;
             flex: 1;
-            border-radius: 2px;
-            border: 1px solid #ddd;
+            border: none;
             padding: 0 5px;
             font-size: 16px;
+            background-color: transparent;
+            border-bottom: 1px solid #ddd;
+            transition: all .2s ease-out;
+
+            &:focus {
+                border-bottom: 1px solid #2196f3;
+            }
         }
 
         > i {
@@ -223,5 +232,10 @@ const MembersWrapper = styled.div`
                 color: #2196f3;
             }
         }
+    }
+
+    .member-list {
+        flex: 1;
+        overflow-y: auto;
     }
 `

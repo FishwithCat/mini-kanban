@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import Modal from '@material-ui/core/Modal';
+// import Modal from '@material-ui/core/Modal';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/web/redux/create-store';
 import { setModifiedStep, updateStep } from '@/web/redux/valueStream/valueStreamActions';
 import { ModifyStep } from '.';
 import { Step } from '@/model/ValueStream';
+import { MModal } from '@/web/components/MModal';
 
 interface ModifyStepModalProps {
     streamId: string
@@ -28,52 +29,22 @@ export const ModifyStepModal: React.FC<ModifyStepModalProps> = React.memo(props 
         [streamId]
     )
 
-    const modalStyle = React.useMemo<React.CSSProperties>(() => {
-        if (modifiedStep?.modalPosition) {
-            const modalWith = 250
-            const { modalPosition } = modifiedStep
-            const { x, y } = modalPosition
-            if (x + modalWith >= document.body.clientWidth) {
-                return {
-                    top: y,
-                    left: x - modalWith
-                }
-            }
-            return {
-                top: y,
-                left: x,
-            }
-        }
-        return {
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)'
-        }
-    }, [modifiedStep])
 
     return (
-        <Modal
-            open={open}
-            onClose={handleClose}
+        <MModal
+            width={300}
+            footer={null}
+            closable={false}
+            visible={open}
+            onCancel={handleClose}
         >
-            <Wrapper>
-                {
-                    modifiedStep?.data &&
-                    <ModifyStep
-                        style={modalStyle}
-                        defaultStep={modifiedStep.data}
-                        onSave={handleUpdateStep}
-                    />
-                }
-            </Wrapper>
-        </Modal>
+            {
+                modifiedStep &&
+                <ModifyStep
+                    defaultStep={modifiedStep}
+                    onSave={handleUpdateStep}
+                />
+            }
+        </MModal>
     )
 })
-
-const Wrapper = styled.div`
-    outline: none;
-
-    .modify-step {
-        position: absolute;
-    }
-`

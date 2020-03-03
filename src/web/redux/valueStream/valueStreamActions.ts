@@ -1,7 +1,6 @@
 import { TypedAction } from "@/model/action";
 import valueStreamActionKeys from "./valueStreamActionKeys";
 import { ValueStream, ValueStreamStruct, Step, ValueStreamBaseInfo } from "@/model/ValueStream";
-import { ModalPosition } from "@/model/position";
 import { UserBaseInfo } from "@/model/user";
 
 export interface FetchValueStreamPayload { kanbanId: string }
@@ -93,11 +92,10 @@ export const updateStep = (streamId: string, newStep: Step): TypedAction<UpdateS
 
 export interface SetModifiedStepPayload {
     step: Step | null,
-    modalPosition?: ModalPosition
 }
-export const setModifiedStep = (step: Step | null, modalPosition?: ModalPosition): TypedAction<SetModifiedStepPayload> => ({
+export const setModifiedStep = (step: Step | null): TypedAction<SetModifiedStepPayload> => ({
     type: valueStreamActionKeys.setModifiedStep,
-    payload: { step, modalPosition }
+    payload: { step }
 })
 
 export interface InviteMemberPayload {

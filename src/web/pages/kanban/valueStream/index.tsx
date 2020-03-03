@@ -47,7 +47,11 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
     return (
         <Wrapper className="value-stream">
             <Menu className="menu">
-                <i className="iconfont icon-team" onClick={() => setShowMembers(true)} />
+                <div className="left">
+                </div>
+                <div className="right">
+                    <i className="iconfont icon-team" onClick={() => setShowMembers(true)} />
+                </div>
             </Menu>
             <div className="value-stream-content">
                 <div className="value-stream-content-scroll-area">
@@ -88,10 +92,19 @@ const Menu = styled.div`
     height: 32px;
     line-height: 32px;
     background: #fff;
-    text-align: right;
     padding: 0 20px;
+    display: flex;
 
-    > i {
+    .left, .right {
+        flex: 1;
+    }
+    
+    .right {
+        text-align: right;
+    }
+
+
+    i {
         font-size: 18px;
         cursor: pointer;
     }
@@ -105,6 +118,7 @@ const Wrapper = styled.div`
     > .value-stream-content {
         position: relative;
         flex: 1;
+        overflow: hidden;
 
         > .value-stream-content-scroll-area {
             height: 100%;

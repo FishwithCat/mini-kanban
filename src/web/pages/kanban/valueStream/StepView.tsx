@@ -7,11 +7,11 @@ import { useCardsOfStep } from '@/web/hooks/useCardsOfStep';
 import { useDispatch } from 'react-redux';
 import { createCard } from '@/web/redux/cards/cardsActions';
 import { StepContent } from './StepContent';
-import withStyles from '@material-ui/core/styles/withStyles';
-import Menu from '@material-ui/core/Menu';
-import Fade from '@material-ui/core/Fade';
 import { deleteStep, setModifiedStep } from '@/web/redux/valueStream/valueStreamActions';
 import { Separator } from '@/web/components/Separator';
+import { MDropDown } from '@/web/components/MDropdown';
+import { MMenu, MenuItem } from '@/web/components/MMenu';
+import { ClickParam } from 'antd/es/menu';
 
 
 interface StepViewProps {
@@ -22,8 +22,6 @@ interface StepViewProps {
 export const StepView: React.FC<StepViewProps> = React.memo(props => {
     const { streamId, step, canCreateCard } = props
     const [showCreateBox, setShowCreateBox] = React.useState(false)
-    const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(menuAnchorEl);
 
     const dispatch = useDispatch()
     const cards = useCardsOfStep(streamId, step.id)
@@ -40,22 +38,35 @@ export const StepView: React.FC<StepViewProps> = React.memo(props => {
 
     const onCancelCreate = React.useCallback(() => setShowCreateBox(false), [])
 
-    const onCloseMenu = React.useCallback(() => setMenuAnchorEl(null), [])
 
     const onDeleteStep = React.useCallback(() => {
         dispatch(deleteStep(streamId, step.id))
-        setMenuAnchorEl(null)
     }, [streamId, step.id])
 
-    const onModifyStep = React.useCallback((e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-        dispatch(setModifiedStep(step, { x: e.clientX, y: e.clientY }))
-        setMenuAnchorEl(null)
+    const onModifyStep = React.useCallback((e: ClickParam) => {
+        dispatch(setModifiedStep(step))
     }, [step])
 
     const StepHeadStyle = React.useMemo<React.CSSProperties>(() => {
         if (step?.color) return { backgroundColor: step.color }
         return { backgroundColor: '#fff' }
     }, [step?.color])
+
+    const menu = (
+        <MMenu>
+            <StyledMenuItem onClick={onModifyStep}>
+                <i className="iconfont icon-edit" />
+                <div className="name">编辑步骤</div>
+            </StyledMenuItem>
+
+            <Separator />
+
+            <StyledMenuItem className="danger" onClick={onDeleteStep}>
+                <i className="iconfont icon-delete" />
+                <div className="name">删除步骤</div>
+            </StyledMenuItem>
+        </MMenu>
+    )
 
     return (
         <Wrapper className="step">
@@ -68,9 +79,10 @@ export const StepView: React.FC<StepViewProps> = React.memo(props => {
                             onClick={onShowCreateBox}
                         />
                     }
-                    <i className="more iconfont icon-ellipsis"
-                        onClick={(event: React.MouseEvent<HTMLElement>) => setMenuAnchorEl(event.currentTarget)}
-                    />
+                    <MDropDown overlay={menu}>
+                        <i className="more iconfont icon-ellipsis" />
+                    </MDropDown>
+
                 </div>
             </div >
             {
@@ -83,71 +95,21 @@ export const StepView: React.FC<StepViewProps> = React.memo(props => {
                 />
             }
             <StepContent stepId={step.id} cards={cards} />
-
-            <StyledMenu
-                anchorEl={menuAnchorEl}
-                keepMounted
-                open={open}
-                onClose={onCloseMenu}
-                TransitionComponent={Fade}
-                elevation={0}
-                getContentAnchorEl={null}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center',
-                }}
-            >
-                <MenuItem onClick={onModifyStep}>
-                    <i className="iconfont icon-edit" />
-                    <div className="name">编辑步骤</div>
-                </MenuItem>
-
-                <Separator />
-
-                <MenuItem className="danger" onClick={onDeleteStep}>
-                    <i className="iconfont icon-delete" />
-                    <div className="name">删除步骤</div>
-                </MenuItem>
-            </StyledMenu>
         </Wrapper >
     )
 })
 
-const StyledMenu = withStyles(() => ({
-    paper: {
-        border: 'none',
-        boxShadow: '0 2px 20px rgba(0,0,0,0.1)'
-    },
-    list: {
-        padding: '5px 0'
-    }
-}))(Menu)
-
-
-const MenuItem = styled.li`
+const StyledMenuItem = styled(MenuItem)`
     display: flex;
-    cursor: pointer;
-    outline: none;
-    line-height: 32px;
-    height: 32px;
-    padding: 0 16px;
 
-    &.danger {
-        color: #f44336;
+    > i {
+        margin-right: 10px;
+        flex-shrink: 0;
     }
 
-    > i { 
-        font-size: 14px;
-        margin-right: 8px;
-        transition: color .2s ease-out;
-    }
-
-    &:hover {
-        background-color: #f7f7f7;
-
-        &:not(.danger) i {
-            color: #2196f3;
-        }
+    .name {
+        flex: 1;
+        text-align: center;
     }
 `
 
@@ -166,7 +128,7 @@ const Wrapper = styled.div`
         padding: 6px 0;
         background-color: #fff;
         letter-spacing: 1px;
-        box-shadow: 0 1px 3px 0px rgba(0, 0, 0, .1);
+        box-shadow: 0 1px 3px 0px rgba(0, 0, 0, .2);
         z-index: 1;
         display: flex;
 

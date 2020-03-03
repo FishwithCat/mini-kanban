@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import logo from '@/web/images/logo.png';
 import { useDispatch } from 'react-redux';
 import { login } from '@/web/redux/user/userActions';
 import { useHistory } from 'react-router-dom';
 import { useCurrentUser } from '@/web/hooks/useCurrentUser';
+import { MButton } from '@/web/components/MButton';
 
 interface LoginProps {
 
@@ -53,10 +54,7 @@ export const Login: React.FC<LoginProps> = React.memo(props => {
                     </div>
 
                     <div className="btn-box">
-                        <LoginBtn variant="contained"
-                            color="primary"
-                            onClick={onLogin}
-                        >
+                        <LoginBtn type="primary" onClick={onLogin} >
                             开始使用
                         </LoginBtn>
                     </div>
@@ -112,9 +110,8 @@ const StyledInput = styled.input`
     font-size: 16px;
 `
 
-const LoginBtn = styled(Button)`
+const LoginBtn = styled(MButton)`
     border-radius: 0;
     width: 100%;
     height: 100%;
-    box-shadow: none;
 `

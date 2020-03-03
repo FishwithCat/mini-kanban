@@ -26,6 +26,5 @@ export const immutableDeleteObjFromList = <T>(list: T[], newItem: T, key: (keyof
     const deleteIndex = list.findIndex(item => item[key] === newItem[key])
     if (deleteIndex < 0) return list
     return list.slice(0, deleteIndex)
-        .concat(newItem)
         .concat(list.slice(deleteIndex + 1))
 }

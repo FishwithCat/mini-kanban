@@ -10,10 +10,11 @@ import { ValueStreamBaseInfo } from "@/model/ValueStream";
 import { EmptyArray } from "@/model/empty";
 import { immutableUpdateList } from "@/model/utils";
 
+type UserId = string
 export interface UserState {
     currentUser: User | null,
     activeStreamId: string | null,
-    availableStreamMap: Record<string, ValueStreamBaseInfo[]>
+    availableStreamMap: Record<UserId, ValueStreamBaseInfo[]>
 }
 
 const initState: UserState = {

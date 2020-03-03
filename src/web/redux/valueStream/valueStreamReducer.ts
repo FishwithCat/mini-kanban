@@ -8,17 +8,13 @@ import {
     UpdateMemberSuccessPayload
 } from "./valueStreamActions";
 import { ValueStream, ValueStreamStruct, Step } from "@/model/ValueStream";
-import { ModalPosition } from "@/model/position";
 import { UserBaseInfo } from "@/model/user";
 import { immutableUpdateList, immutableUpdateObjList } from "@/model/utils";
 
 export interface ValueStreamState {
     valueStreamStructMap: Record<string, ValueStreamStruct>,
     vsMemberMap: Record<string, UserBaseInfo[]>,
-    modifiedStep: {
-        data: Step | null,
-        modalPosition?: ModalPosition
-    } | null
+    modifiedStep: Step | null
 }
 
 const initState = {
@@ -106,19 +102,10 @@ const handleUpdateStepsSuccess = (state: ValueStreamState, payload: UpdateStepsS
 }
 
 const handleSetModifiedStep = (state: ValueStreamState, payload: SetModifiedStepPayload) => {
-    const { step, modalPosition } = payload
-    if (step === null) {
-        return {
-            ...state,
-            modifiedStep: null
-        }
-    }
+    const { step } = payload
     return {
         ...state,
-        modifiedStep: {
-            data: step,
-            modalPosition
-        }
+        modifiedStep: step
     }
 }
 

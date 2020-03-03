@@ -1,11 +1,14 @@
 import React from 'react';
 import { UserBaseInfo } from '@/model/user';
-import Chip from '@material-ui/core/Chip';
+// import Chip from '@material-ui/core/Chip';
 import styled from 'styled-components';
-import withStyles from '@material-ui/core/styles/withStyles';
-import Menu from '@material-ui/core/Menu';
-import Fade from '@material-ui/core/Fade';
+// import withStyles from '@material-ui/core/styles/withStyles';
+// import Menu from '@material-ui/core/Menu';
+// import Fade from '@material-ui/core/Fade';
 import { immutableUpdateList, immutableDeleteFromList, immutableDeleteObjFromList, immutableUpdateObjList } from '@/model/utils';
+import { MChip } from '@/web/components/MChip';
+import { MDropDown } from '@/web/components/MDropdown';
+import { MMenu, MenuItem } from '@/web/components/MMenu';
 
 
 interface MemberTagProps {
@@ -15,23 +18,10 @@ interface MemberTagProps {
 }
 export const MemberTag: React.FC<MemberTagProps> = React.memo(props => {
     const { members, participants, onChange } = props
-    const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(menuAnchorEl)
-
-    const getMemberName = (memberId: string | undefined) => {
-        if (!memberId) return null
-        const memberInfo = members.find(member => member.id === memberId)
-        return memberInfo ? memberInfo.name : '已离队'
-    }
-
-    const onCloseMenu = () => {
-        setMenuAnchorEl(null)
-    }
 
     const onChoseMember = (newMember: UserBaseInfo) => {
         const newParticipants = immutableUpdateObjList(participants, newMember, 'id')
         onChange(newParticipants)
-        setMenuAnchorEl(null)
     }
 
     const handleDelete = (member: UserBaseInfo) => {
@@ -39,69 +29,47 @@ export const MemberTag: React.FC<MemberTagProps> = React.memo(props => {
         onChange(newParticipants)
     }
 
+    const menu = (
+        <MMenu>
+            {
+                members.map(member => (
+                    <StyledMenuItem key={member.id}
+                        disabled={participants.findIndex(item => item.id === member.id) >= 0}
+                        onClick={() => onChoseMember(member)}>
+                        <i className="iconfont icon-edit" />
+                        <div className="name">{member.name}</div>
+                    </StyledMenuItem>
+                ))
+            }
+        </MMenu>
+    )
+
     return (
         <MemberTagWrapper>
-            <i className="iconfont icon-adduser"
-                onClick={(event: React.MouseEvent<HTMLElement>) => setMenuAnchorEl(event.currentTarget)}
-            />
+            <MDropDown overlay={menu} trigger={['click']}>
+                <i className="iconfont icon-adduser" />
+            </MDropDown>
             <div>
                 {
-                    participants.map(members => (
-                        <StyledChip key={members.id}
-                            size="small"
-                            label={members.name}
-                            onDelete={() => handleDelete(members)}
-                        />
+                    participants.map(member => (
+                        <StyledChip key={member.id}
+                            closable
+                            onClose={() => handleDelete(member)}
+                        >
+                            {member.name}
+                        </StyledChip>
                     ))
                 }
             </div>
-
-            <StyledMenu
-                anchorEl={menuAnchorEl}
-                keepMounted
-                open={open}
-                onClose={onCloseMenu}
-                TransitionComponent={Fade}
-                elevation={0}
-                getContentAnchorEl={null}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center',
-                }}
-            >
-                {
-                    members.map(member => (
-                        <MenuItem key={member.id} onClick={() => onChoseMember(member)}>
-                            <i className="iconfont icon-edit" />
-                            <div className="name">{member.name}</div>
-                        </MenuItem>
-                    ))
-                }
-            </StyledMenu>
         </MemberTagWrapper>
     )
 })
 
-const StyledMenu = withStyles(() => ({
-    paper: {
-        border: 'none',
-        boxShadow: '0 2px 20px rgba(0,0,0,0.1)'
-    },
-    list: {
-        padding: '5px 0'
-    }
-}))(Menu)
-
-const StyledChip = withStyles(() => ({
-    root: {
-        height: '20px',
-        marginBottom: '2px'
-    },
-    label: {
-        paddingLeft: '6px',
-        paddingRight: '6px'
-    }
-}))(Chip)
+const StyledChip = styled(MChip)`
+    background: transparent;
+    margin-bottom: 2px;
+    margin-right: 3px;
+`
 
 const MemberTagWrapper = styled.div`
     &:after {
@@ -112,16 +80,16 @@ const MemberTagWrapper = styled.div`
     }
 
     .icon-adduser {
-        width: 20px;
-        height: 20px;
-        line-height: 20px;
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        margin-bottom: 2px;
         text-align: center;
         background-color: #2196f3;
         color: #fff;
         border-radius: 50%;
         float: left;
-        margin-right: 5px;
-        margin-bottom: 2px;
+        margin-right: 8px;
         cursor: pointer;
     }
 
@@ -130,29 +98,37 @@ const MemberTagWrapper = styled.div`
     }
 `
 
-const MenuItem = styled.li`
+const StyledMenuItem = styled(MenuItem)`
     display: flex;
-    cursor: pointer;
-    outline: none;
-    line-height: 32px;
-    height: 32px;
-    padding: 0 16px;
-
-    &.danger {
-        color: #f44336;
-    }
-
     > i { 
-        font-size: 14px;
-        margin-right: 8px;
-        transition: color .2s ease-out;
-    }
-
-    &:hover {
-        background-color: #f7f7f7;
-
-        &:not(.danger) i {
-            color: #2196f3;
-        }
+         margin-right: 8px;
+         transition: color .2s ease-out;
     }
 `
+
+// const MenuItem = styled.li`
+//     display: flex;
+//     cursor: pointer;
+//     outline: none;
+//     line-height: 32px;
+//     height: 32px;
+//     padding: 0 16px;
+
+//     &.danger {
+//         color: #f44336;
+//     }
+
+//     > i { 
+//         font-size: 14px;
+//         margin-right: 8px;
+//         transition: color .2s ease-out;
+//     }
+
+//     &:hover {
+//         background-color: #f7f7f7;
+
+//         &:not(.danger) i {
+//             color: #2196f3;
+//         }
+//     }
+// `

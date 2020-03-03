@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Textarea } from '@/web/components/TextArea';
+import { MTextArea } from '@/web/components/MTextArea';
 import { CardInfo } from '@/model/card';
 import { UserBaseInfo } from '@/model/user';
 import { useValueStreamMembers } from '@/web/hooks/useValueStreamMembers';
 import { EmptyArray } from '@/model/empty';
-import { Chip } from '@material-ui/core';
+// import { Chip } from '@material-ui/core';
 import { MemberTag } from '../components/MemberTag';
 
 
@@ -78,15 +78,16 @@ const CreateCardBox: React.FC<CreateCardBoxProps> = React.memo(props => {
             <div className="title">
                 标题
             </div>
-            <Textarea
+            <FreezedTextArea
                 value={title}
                 onChange={onTitleChange}
-                rowsMin={1}
-                rowsMax={2}
-                aria-label="maximum height"
+                autoSize={{
+                    minRows: 1,
+                    maxRows: 2
+                }}
                 autoFocus
             />
-            <div className="title">
+            <div className="title" style={{ marginTop: '10px' }}>
                 负责人
             </div>
             <MemberTag members={members}
@@ -101,6 +102,9 @@ const CreateCardBox: React.FC<CreateCardBoxProps> = React.memo(props => {
     )
 })
 
+const FreezedTextArea = styled(MTextArea)`
+    resize: none
+`
 
 const CreateCardBoxWrapper = styled.div`
     padding: 10px;
