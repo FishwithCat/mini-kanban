@@ -10,12 +10,11 @@ import { inviteMember, deleteMember } from '@/web/redux/valueStream/valueStreamA
 const COLORS = ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#F78DA7', '#9900EF']
 
 interface MembersProps {
-    open: boolean,
     streamId: string,
-    closeMembers(): void
+    // closeMembers(): void
 }
 export const Members: React.FC<MembersProps> = React.memo(props => {
-    const { open, streamId, closeMembers } = props
+    const { streamId } = props
     const [filter, setFilter] = React.useState('')
 
     const members = useValueStreamMembers(streamId)
@@ -39,21 +38,10 @@ export const Members: React.FC<MembersProps> = React.memo(props => {
         dispatch(deleteMember(streamId, memberId))
     }
 
-    const membersModalStyle = React.useMemo(() => {
-        if (!open) {
-            return {
-                transform: `translateX(280px)`
-            }
-        }
-    }, [open])
-
     return (
-        <MembersWrapper className="members" style={membersModalStyle}>
+        <MembersWrapper className="members">
             <div className="head">
                 <div className="title">看板成员</div>
-                <div className="icons">
-                    <i className="iconfont icon-close" onClick={closeMembers} />
-                </div>
             </div>
             <Separator />
             <div className="search-box">
@@ -153,15 +141,7 @@ const MemberInfoWrapper = styled.div`
 `
 
 const MembersWrapper = styled.div`
-    width: 250px;
-    position: absolute;
-    right: 0px;
-    top: 0px;
     height: 100%;
-    box-shadow: -3px 0 3px rgba(0, 0, 0, .1);
-    background: #fafafa;
-    z-index: 9;
-    transition: transform .2s ease-out;
     display: flex;
     flex-direction: column;
 

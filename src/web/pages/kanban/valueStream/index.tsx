@@ -10,6 +10,7 @@ import { moveCard } from '@/web/redux/cards/cardsActions';
 import { ModifyStepModal } from '../components/ModifyStep/ModifyStepModal';
 import { updateStep } from '@/web/redux/valueStream/valueStreamActions';
 import { Members } from '../components/Members';
+import { MDrawer } from '@/web/components/MDrawer';
 
 
 interface ValueStreamProps {
@@ -75,13 +76,25 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                         </DragDropContext>
                     }
                 </div>
-                {
+                <MDrawer
+                    placement="right"
+                    closable={false}
+                    onClose={() => setShowMembers(false)}
+                    visible={showMembers}
+                    getContainer={false}
+                    style={{ position: 'absolute' }}
+                >
+                    <Members
+                        streamId={id}
+                    />
+                </MDrawer>
+                {/* {
                     valueStream &&
                     <Members open={showMembers}
                         streamId={id}
                         closeMembers={() => setShowMembers(false)}
                     />
-                }
+                } */}
             </div>
             <ModifyStepModal streamId={id} />
         </Wrapper>
