@@ -4,11 +4,11 @@ import { TypedAction } from "@/model/action";
 import userActionKeys from "./userActionKeys";
 import { LoginSuccessPayload, SetActiveValueStreamPayload } from "./userActions";
 import valueStreamActionKeys from "../valueStream/valueStreamActionKeys";
-import { CreateValueStreamSuccessPayload, DeleteValueStreamSuccessPayload } from "../valueStream/valueStreamActions";
+import { CreateValueStreamSuccessPayload, DeleteValueStreamSuccessPayload, RenameValueStreamSuccessPayload } from "../valueStream/valueStreamActions";
 import { listImmutableDelete } from "@/web/utils/immutable";
 import { ValueStreamBaseInfo } from "@/model/ValueStream";
 import { EmptyArray } from "@/model/empty";
-import { immutableUpdateList } from "@/model/utils";
+import { immutableUpdateList, immutableUpdateObjList } from "@/model/utils";
 
 type UserId = string
 export interface UserState {
@@ -35,6 +35,8 @@ export const userReducer: Reducer<UserState, TypedAction> = (state = initState, 
             return handleCreateKanbanSuccess(state, action.payload)
         case valueStreamActionKeys.deleteValueStreamSuccess:
             return handleDeleteKanbanSuccess(state, action.payload)
+        case valueStreamActionKeys.renameValueStreamSuccess:
+            return handleRenameValueStreamSuccess(state, action.payload)
         default:
             return state
     }
@@ -92,6 +94,21 @@ const handleDeleteKanbanSuccess = (state: UserState, payload: DeleteValueStreamS
     const availableStreamMap = { ...state.availableStreamMap }
     for (let userId in availableStreamMap) {
         availableStreamMap[userId] = availableStreamMap[userId].filter(stream => stream.id !== streamId)
+    }
+    return {
+        ...state,
+        availableStreamMap
+    }
+}
+
+const handleRenameValueStreamSuccess = (state: UserState, payload: RenameValueStreamSuccessPayload) => {
+    const { streamId, newName } = payload
+    const availableStreamMap = { ...state.availableStreamMap }
+    for (let userId in availableStreamMap) {
+        const valueStreamList = availableStreamMap[userId]
+        if (valueStreamList.findIndex(stream => stream.id === streamId) >= 0) {
+            availableStreamMap[userId] = immutableUpdateObjList(valueStreamList, { id: streamId, name: newName }, 'id')
+        }
     }
     return {
         ...state,

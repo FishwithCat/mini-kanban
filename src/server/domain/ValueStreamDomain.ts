@@ -26,6 +26,10 @@ class ValueStreamDomain {
         return (await this.dbHandler).push(valueStream).write()
     }
 
+    renameValueStream = async (id: string, newName: string) => {
+        return (await this.dbHandler).find({ id }).set('name', newName).write()
+    }
+
     getValueStream = async (id: string) => {
         return (await this.dbHandler).find({ id }).value()
     }

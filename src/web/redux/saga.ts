@@ -13,6 +13,7 @@ function* rootSaga() {
         takeLatest(valueStreamActionKeys.fetchValueStream, valueStreamSaga.fetchValueStream),
         takeLatest(valueStreamActionKeys.fetchValueStreamMembers, valueStreamSaga.fetchValueStreamMembers),
         takeLatest(valueStreamActionKeys.createValueStream, valueStreamSaga.createValueStream),
+        takeLatest(valueStreamActionKeys.renameValueStream, valueStreamSaga.renameValueStream),
         takeLatest(valueStreamActionKeys.deleteValueStream, valueStreamSaga.deleteValueStream),
         takeLatest(valueStreamActionKeys.updateStep, valueStreamSaga.updateStep),
         takeLatest(valueStreamActionKeys.deleteStep, valueStreamSaga.deleteStep),

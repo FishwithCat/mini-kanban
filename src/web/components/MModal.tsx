@@ -6,7 +6,7 @@ import 'antd/es/modal/style';
 export const MModal: React.FC<ModalProps> = React.memo(props => {
     const { children, ...restProps } = props
     return (
-        <Modal {...restProps}>
+        <Modal {...restProps} destroyOnClose>
             {children}
         </Modal>
     )

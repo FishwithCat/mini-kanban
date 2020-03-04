@@ -6,8 +6,14 @@ import { logout, setActiveValueStream } from '@/web/redux/user/userActions';
 import { RootState } from '@/web/redux/create-store';
 import { useCurrentUser } from '@/web/hooks/useCurrentUser';
 import { EmptyArray } from '@/model/empty';
-import { ValueStreamBaseInfo } from '@/model/ValueStream';
+import { ValueStreamBaseInfo, ValueStreamStruct } from '@/model/ValueStream';
 import { MSelect, Option } from '../MSelect';
+import { MDropDown } from '../MDropdown';
+import { MenuItem, MMenu } from '../MMenu';
+import { MTooltip } from '../MTooltip';
+import { setModifiedStep, setModifiedValueStream, createValueStream, renameValueStream } from '@/web/redux/valueStream/valueStreamActions';
+import { MModal } from '../MModal';
+import { ModifyValueStream } from './ModifyValueStream';
 
 
 
@@ -18,6 +24,7 @@ export const AppSideBar: React.FC<AppSideBarProps> = React.memo(props => {
     const currentUser = useCurrentUser()
     const activeValueStreamId = useSelector((state: RootState) => state.userReducer.activeStreamId)
     const availableStreamMap = useSelector((state: RootState) => state.userReducer.availableStreamMap)
+    const modifiedStream = useSelector((state: RootState) => state.valueStreamReducer.modifiedValueStream)
 
     const availableStreams = React.useMemo<ValueStreamBaseInfo[]>(() => {
         if (!currentUser) return EmptyArray
@@ -29,8 +36,8 @@ export const AppSideBar: React.FC<AppSideBarProps> = React.memo(props => {
     }, [])
 
     const switchValueStream = React.useCallback(
-        (event) => {
-            dispatch(setActiveValueStream(event.target.value))
+        (streamId) => {
+            dispatch(setActiveValueStream(streamId))
         },
         []
     )
@@ -38,6 +45,43 @@ export const AppSideBar: React.FC<AppSideBarProps> = React.memo(props => {
     //     if (!activeKanbanId) return
     //     dispatch(deleteValueStream(activeKanbanId))
     // }, [dispatch, activeKanbanId])
+
+    const menu = React.useMemo(() => (
+        <MMenu>
+            <StyledMenuItem onClick={onLogOut}>
+                <i className="iconfont icon-export" />
+                <span className="name"> 退 出</span>
+            </StyledMenuItem>
+        </MMenu>
+    ), [onLogOut])
+
+
+    const showCreateValueStream = React.useCallback(() => {
+        /** hack: id 为 '', 认为是新建看板 */
+        dispatch(setModifiedValueStream({ id: '', name: '新看板' }))
+    }, [])
+
+    const showModifyStream = React.useCallback(() => {
+        const modifiedStream = availableStreams.find(stream => stream.id === activeValueStreamId)
+        if (!modifiedStream) return
+        dispatch(setModifiedValueStream(modifiedStream))
+    }, [activeValueStreamId, availableStreams])
+
+    const hideModifyValueStreamModal = React.useCallback(() => {
+        dispatch(setModifiedValueStream(null))
+    }, [])
+
+    const onSaveValueStream = React.useCallback((valueStream: ValueStreamBaseInfo) => {
+        if (!currentUser?.id) return
+        const { id, name } = valueStream
+        /** hack: id 为 '', 认为是新建看板 */
+        if (id === '') {
+            const newStream: ValueStreamStruct = { name, steps: [] }
+            dispatch(createValueStream(currentUser.id, newStream))
+        } else {
+            dispatch(renameValueStream(id, name))
+        }
+    }, [currentUser?.id])
 
     return (
         <AppSideBarWrapper className="app-side-bar">
@@ -48,23 +92,57 @@ export const AppSideBar: React.FC<AppSideBarProps> = React.memo(props => {
                     bordered={false}
                 >
                     {
-                        availableStreams.map(stream => (
-                            <Option value={stream.id}>
-                                {stream.name}
-                            </Option>
-                        ))
+                        availableStreams.filter(stream => stream.id !== undefined)
+                            .map(stream => (
+                                <Option value={stream.id!}>
+                                    {stream.name}
+                                </Option>
+                            ))
                     }
                 </MSelect>
             </div>
 
 
             <div className="menu-icons">
+                <MTooltip title="价值流重命名">
+                    <i className="iconfont icon-edit" onClick={showModifyStream} />
+                </MTooltip>
+                <MTooltip title="新建价值流">
+                    <i className="iconfont icon-appstoreadd" onClick={showCreateValueStream} />
+                </MTooltip>
+
+                <MDropDown overlay={menu} trigger={['click']}>
+                    <i className="iconfont icon-menu" />
+                </MDropDown>
             </div>
 
-            <LogoutBtn className="iconfont icon-export" onClick={onLogOut} />
+            {/* <LogoutBtn className="iconfont icon-export" onClick={onLogOut} /> */}
+            {
+                <MModal visible={Boolean(modifiedStream)}
+                    footer={null} width="fit-content"
+                    closable={false}
+                    onCancel={hideModifyValueStreamModal}
+                >
+                    {
+                        modifiedStream &&
+                        <ModifyValueStream
+                            valueStream={modifiedStream}
+                            onSave={onSaveValueStream}
+                        />
+                    }
+                </MModal>
+            }
         </AppSideBarWrapper >
     )
 })
+
+const StyledMenuItem = styled(MenuItem)`
+    display: flex;
+
+    > i {
+        margin-right: 10px;
+    }
+`
 
 
 const AppSideBarWrapper = styled.div`
@@ -81,16 +159,20 @@ const AppSideBarWrapper = styled.div`
     }
 
     .menu-icons {
-        display: flex;
         flex: 1;
-        text-align: center;
+        text-align: right;
 
         > i {
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
-            margin-left: 4px;
+            margin-left: 10px;
             height: 32px;
             line-height: 32px;
+            transition: color .3s ease-out;
+
+            &:hover {
+                color: #2196f3;
+            }
         }
     }
 `

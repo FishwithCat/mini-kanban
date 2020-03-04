@@ -118,7 +118,7 @@ const Menu = styled.div`
 
 
     i {
-        font-size: 18px;
+        font-size: 20px;
         cursor: pointer;
     }
 `
@@ -131,6 +131,7 @@ const Wrapper = styled.div`
     > .value-stream-content {
         position: relative;
         flex: 1;
+        background-color: #fafafa;
         overflow: hidden;
 
         > .value-stream-content-scroll-area {

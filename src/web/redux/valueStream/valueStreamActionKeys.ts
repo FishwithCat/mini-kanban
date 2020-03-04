@@ -8,6 +8,9 @@ export default {
     createValueStream: 'CREATE_VALUE_STREAM',
     createValueStreamSuccess: 'CREATE_VALUE_STREAM_SUCCESS',
 
+    renameValueStream: 'RENAME_VALUE_STREAM',
+    renameValueStreamSuccess: 'RENAME_VALUE_STREAM_SUCCESS',
+
     updateStep: 'UPDATE_STEP',
     deleteStep: 'DELETE_STEP',
 
@@ -17,6 +20,8 @@ export default {
     deleteValueStreamSuccess: 'DELETE_VALUE_STREAM_SUCCESS',
 
     setModifiedStep: 'SET_MODIFIED_STEP',
+
+    setModifiedValueStream: 'SET_MODIFIED_VALUE_STREAM',
 
     inviteMember: 'INVITE_MEMBER',
     deleteMember: 'DELETE_MEMBER',

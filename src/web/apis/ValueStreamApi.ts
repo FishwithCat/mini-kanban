@@ -15,6 +15,11 @@ export const createValueStream = (userId: string, valueStreamStruct: ValueStream
         .then(res => res.data)
 }
 
+export const renameValueStream = (streamId: string, newName: string) => {
+    return Request.put(`/valueStream/rename`, { streamId, newName })
+        .then(res => res.data)
+}
+
 export const deleteValueStream = (streamId: string) => {
     return Request.delete(`/valueStream/${streamId}`).then(res => res.data)
 }

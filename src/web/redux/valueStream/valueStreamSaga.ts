@@ -12,6 +12,8 @@ import {
     InviteMemberPayload,
     updateMemberSuccess,
     DeleteMemberPayload,
+    RenameValueStreamPayload,
+    renameValueStreamSuccess,
 
 } from './valueStreamActions';
 
@@ -62,6 +64,23 @@ function* createValueStream(action: TypedAction<CreateValueStreamPayload>) {
 
     }
 }
+
+function* renameValueStream(action: TypedAction<RenameValueStreamPayload>) {
+    const payload = action.payload!
+    const { streamId, newName } = payload
+    try {
+        const result = yield call((action) => {
+            return ValueStreamApi.renameValueStream(streamId, newName)
+        }, null)
+        if (result && result.id) {
+            const { id, name } = result
+            yield put(renameValueStreamSuccess(id, name))
+        }
+    } catch (error) {
+
+    }
+}
+
 
 function* deleteValueStream(action: TypedAction<DeleteValueStreamPayload>) {
     const payload = action.payload!
@@ -147,9 +166,10 @@ export default {
     fetchValueStream,
     fetchValueStreamMembers,
     createValueStream,
+    renameValueStream,
     deleteValueStream,
     updateStep,
     deleteStep,
     inviteMember,
-    deleteMember
+    deleteMember,
 }

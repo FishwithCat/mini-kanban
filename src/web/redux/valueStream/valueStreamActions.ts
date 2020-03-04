@@ -48,6 +48,22 @@ export const createValueStreamSuccess = (userId: string, valueStream: ValueStrea
     payload: { userId, valueStream }
 })
 
+export interface RenameValueStreamPayload {
+    streamId: string,
+    newName: string
+}
+export const renameValueStream = (streamId: string, newName: string): TypedAction<RenameValueStreamPayload> => ({
+    type: valueStreamActionKeys.renameValueStream,
+    payload: { streamId, newName }
+})
+
+export type RenameValueStreamSuccessPayload = RenameValueStreamPayload
+export const renameValueStreamSuccess = (streamId: string, newName: string): TypedAction<RenameValueStreamSuccessPayload> => ({
+    type: valueStreamActionKeys.renameValueStreamSuccess,
+    payload: { streamId, newName }
+})
+
+
 export interface DeleteValueStreamPayload { streamId: string }
 export const deleteValueStream = (streamId: string): TypedAction<DeleteValueStreamPayload> => ({
     type: valueStreamActionKeys.deleteValueStream,
@@ -90,12 +106,16 @@ export const updateStep = (streamId: string, newStep: Step): TypedAction<UpdateS
 })
 
 
-export interface SetModifiedStepPayload {
-    step: Step | null,
-}
+export interface SetModifiedStepPayload { step: Step | null }
 export const setModifiedStep = (step: Step | null): TypedAction<SetModifiedStepPayload> => ({
     type: valueStreamActionKeys.setModifiedStep,
     payload: { step }
+})
+
+export interface SetModifiedValueStreamPayload { valueStream: ValueStreamBaseInfo | null }
+export const setModifiedValueStream = (valueStream: ValueStreamBaseInfo | null): TypedAction<SetModifiedValueStreamPayload> => ({
+    type: valueStreamActionKeys.setModifiedValueStream,
+    payload: { valueStream }
 })
 
 export interface InviteMemberPayload {
