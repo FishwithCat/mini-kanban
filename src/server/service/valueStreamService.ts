@@ -58,8 +58,8 @@ valueStreamRouter.put('/rename', async (ctx, next) => {
     ctx.body = await vsDomain.renameValueStream(streamId, newName)
 })
 
-valueStreamRouter.delete('/', async (ctx, next) => {
-    const { id: streamId } = ctx.request.query
+valueStreamRouter.delete('/:id', async (ctx, next) => {
+    const { id: streamId } = ctx.params
     const vsDomain = ValueStreamDomain.getInstance()
     await vsDomain.deleteValueStream(streamId)
     ctx.body = { id: streamId }

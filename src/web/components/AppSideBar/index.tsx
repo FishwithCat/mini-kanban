@@ -104,7 +104,7 @@ export const AppSideBar: React.FC<AppSideBarProps> = React.memo(props => {
 
 
             <div className="menu-icons">
-                <MTooltip title="价值流重命名">
+                <MTooltip title="价值流设置">
                     <i className="iconfont icon-edit" onClick={showModifyStream} />
                 </MTooltip>
                 <MTooltip title="新建价值流">
@@ -165,7 +165,7 @@ const AppSideBarWrapper = styled.div`
         > i {
             font-size: 20px;
             cursor: pointer;
-            margin-left: 10px;
+            margin-left: 15px;
             height: 32px;
             line-height: 32px;
             transition: color .3s ease-out;

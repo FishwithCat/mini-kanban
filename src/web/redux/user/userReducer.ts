@@ -34,7 +34,7 @@ export const userReducer: Reducer<UserState, TypedAction> = (state = initState, 
         case valueStreamActionKeys.createValueStreamSuccess:
             return handleCreateKanbanSuccess(state, action.payload)
         case valueStreamActionKeys.deleteValueStreamSuccess:
-            return handleDeleteKanbanSuccess(state, action.payload)
+            return handleDeleteValueStreamSuccess(state, action.payload)
         case valueStreamActionKeys.renameValueStreamSuccess:
             return handleRenameValueStreamSuccess(state, action.payload)
         default:
@@ -88,16 +88,24 @@ const handleCreateKanbanSuccess = (state: UserState, payload: CreateValueStreamS
     }
 }
 
-const handleDeleteKanbanSuccess = (state: UserState, payload: DeleteValueStreamSuccessPayload) => {
-    if (!state.currentUser) return state
+const handleDeleteValueStreamSuccess = (state: UserState, payload: DeleteValueStreamSuccessPayload) => {
+    const { currentUser } = state
+    if (!currentUser) return state
+    const { id } = currentUser
     const { streamId } = payload
     const availableStreamMap = { ...state.availableStreamMap }
     for (let userId in availableStreamMap) {
         availableStreamMap[userId] = availableStreamMap[userId].filter(stream => stream.id !== streamId)
     }
+    const currentAvailableStream = availableStreamMap[id]
+    let activeStreamId = null
+    if (currentAvailableStream.length > 0) {
+        activeStreamId = currentAvailableStream[0].id
+    }
     return {
         ...state,
-        availableStreamMap
+        availableStreamMap,
+        activeStreamId
     }
 }
 

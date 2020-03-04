@@ -95,12 +95,13 @@ const _updateValueStream = (valueStreamStructMap: Record<string, ValueStreamStru
 }
 
 const handleDeleteValueStreamSuccess = (state: ValueStreamState, payload: DeleteValueStreamSuccessPayload) => {
-    const { streamId: kanbanId } = payload
+    const { streamId } = payload
     const valueStreamStructMap = { ...state.valueStreamStructMap }
-    delete valueStreamStructMap[kanbanId]
+    delete valueStreamStructMap[streamId]
     return {
         ...state,
-        valueStreamStructMap
+        valueStreamStructMap,
+        modifiedValueStream: null
     }
 }
 
