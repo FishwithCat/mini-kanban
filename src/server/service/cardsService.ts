@@ -30,7 +30,10 @@ cardsRouter.post('/create', async (ctx, next) => {
     const { card, streamId } = ctx.request.body
     if (!streamId) return ctx.body = {}
     const cardsDomain = getCardsDomain(streamId)
-    const cardToSave: Card = { ...card, id: shortid.generate() }
+    const cardToSave: Card = {
+        ...card,
+        id: shortid.generate()
+    }
     await cardsDomain.createCard(cardToSave)
     ctx.body = cardToSave
 })

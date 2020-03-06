@@ -5,7 +5,7 @@ import { Step } from '@/model/ValueStream';
 import { CreateCardArea } from './CreateCardArea';
 import { useCardsOfStep } from '@/web/hooks/useCardsOfStep';
 import { useDispatch } from 'react-redux';
-import { createCard } from '@/web/redux/cards/cardsActions';
+import { createCard, fetchCardsOfStep } from '@/web/redux/cards/cardsActions';
 import { StepContent } from './StepContent';
 import { deleteStep, setModifiedStep } from '@/web/redux/valueStream/valueStreamActions';
 import { Separator } from '@/web/components/Separator';
@@ -52,6 +52,10 @@ export const StepView: React.FC<StepViewProps> = React.memo(props => {
         return { backgroundColor: '#fff' }
     }, [step?.color])
 
+    React.useEffect(() => {
+        dispatch(fetchCardsOfStep(streamId, step.id))
+    }, [step.id])
+
     const menu = (
         <MMenu>
             <StyledMenuItem onClick={onModifyStep}>
@@ -94,7 +98,7 @@ export const StepView: React.FC<StepViewProps> = React.memo(props => {
                     onCancel={onCancelCreate}
                 />
             }
-            <StepContent stepId={step.id} cards={cards} />
+            <StepContent streamId={streamId} stepId={step.id} cards={cards} />
         </Wrapper >
     )
 })

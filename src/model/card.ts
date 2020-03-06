@@ -5,13 +5,18 @@ export interface TimePoint {
     timeStamp: number
 }
 
+export enum Priority {
+    low,
+    high
+}
+
 export interface CardInfo {
     title: string,
     stepId: string,
     describe?: string,
     participants?: UserBaseInfo[],
     timeLine?: TimePoint[],
-    priority?: string,
+    priority?: Priority,
     position: number /** position 决定卡片前后顺序 */
 }
 

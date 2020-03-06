@@ -31,7 +31,7 @@ export const ModifyValueStream: React.FC<ModifyValueStreamProps> = React.memo(pr
         </h2>
 
         <MPopConfirm
-            title="确定删除当前价值流?"
+            title="确定删除当前看板?"
             onConfirm={onDeleteValueStream}
             okText="确定"
             cancelText="取消"

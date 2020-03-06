@@ -1,5 +1,6 @@
 import { createDbHandler } from '../infrastructure/db';
 import { Card } from '@/model/card'
+import { EmptyArray } from '@/model/empty';
 
 class CardsDomain {
     private dbHandler: any
@@ -19,13 +20,23 @@ class CardsDomain {
 
     createCard = async (newCard: Card) => {
         // const cards = (await this.dbHandler).value()
-        return (await this.dbHandler).push(newCard).write()
+        const cardToSave = {
+            ...newCard,
+            timeLine: [{ stepId: newCard.stepId, timeStamp: new Date().valueOf() }]
+        }
+        return (await this.dbHandler).push(cardToSave).write()
     }
 
     updateCardPosition = async (cardId: string, stepId: string, position: number) => {
+        const cardInfo: Card = await (await this.dbHandler).find({ id: cardId }).value()
+        let timeLime = cardInfo.timeLine ?? EmptyArray
+        if (cardInfo.stepId !== stepId) {
+            timeLime = timeLime.concat({ stepId, timeStamp: new Date().valueOf() })
+        }
         return (await this.dbHandler).find({ id: cardId })
             .set('stepId', stepId)
             .set('position', position)
+            .set('timeLine', timeLime)
             .write()
     }
 }

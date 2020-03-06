@@ -1,16 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useValueStream } from '@/web/hooks/useValueStream';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { generate } from 'shortid';
 // import { updateSteps } from '@/web/redux/valueStream/valueStreamActions';
 import { StepView } from './StepView';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import { moveCard } from '@/web/redux/cards/cardsActions';
+import { DragDropContext, DropResult, DraggableLocation } from 'react-beautiful-dnd';
+import { moveCard, setModifiedCard } from '@/web/redux/cards/cardsActions';
 import { ModifyStepModal } from '../components/ModifyStep/ModifyStepModal';
-import { updateStep } from '@/web/redux/valueStream/valueStreamActions';
+import { updateStep, fetchValueStream, fetchValueStreamMembers } from '@/web/redux/valueStream/valueStreamActions';
 import { Members } from '../components/Members';
 import { MDrawer } from '@/web/components/MDrawer';
+import { RootState } from '@/web/redux/create-store';
+import { CardDetail } from '@/web/components/CardDetail';
 
 
 interface ValueStreamProps {
@@ -24,26 +26,41 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
     const dispatch = useDispatch()
     const valueStream = useValueStream(id)
 
-    const onCreateStep = React.useCallback(
-        () => {
-            dispatch(updateStep(id, {
-                id: generate(),
-                name: '新步骤'
-            }))
-        }, [dispatch, id]
-    )
+    const modifiedCardInfo = useSelector((state: RootState) => state.cardsReducer.modifiedCard)
+
+    const onCreateStep = React.useCallback(() => {
+        dispatch(updateStep(id, {
+            id: generate(),
+            name: '新步骤'
+        }))
+    }, [dispatch, id])
+
+    const onCloseModifiedCardModal = React.useCallback(() => {
+        dispatch(setModifiedCard(id, null))
+    }, [id])
+
+    const _isSameLocation = (source: DraggableLocation, dest: DraggableLocation) => {
+        const { droppableId: sourceId, index: sourceIndex } = source
+        const { droppableId: destId, index: destIndex } = dest
+        return sourceId === destId && sourceIndex === destIndex
+    }
 
     const onDragEnd = React.useCallback(
         (result: DropResult) => {
             const { source, destination } = result
-            if (!destination) return
+            if (!destination || _isSameLocation(source, destination)) return
             dispatch(moveCard(id,
                 { stepId: source.droppableId, index: source.index },
                 { stepId: destination.droppableId, index: destination.index }
             ))
         },
-        []
+        [id]
     )
+
+    React.useEffect(() => {
+        dispatch(fetchValueStream(id))
+        dispatch(fetchValueStreamMembers(id))
+    }, [id])
 
     return (
         <Wrapper className="value-stream">
@@ -77,10 +94,9 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                     }
                 </div>
                 <MDrawer
-                    placement="right"
                     closable={false}
-                    onClose={() => setShowMembers(false)}
                     visible={showMembers}
+                    onClose={() => setShowMembers(false)}
                     getContainer={false}
                     style={{ position: 'absolute' }}
                 >
@@ -88,13 +104,20 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                         streamId={id}
                     />
                 </MDrawer>
-                {/* {
-                    valueStream &&
-                    <Members open={showMembers}
-                        streamId={id}
-                        closeMembers={() => setShowMembers(false)}
-                    />
-                } */}
+                <MDrawer
+                    visible={Boolean(modifiedCardInfo)}
+                    onClose={onCloseModifiedCardModal}
+                    placement="right"
+                    width="500"
+                    destroyOnClose
+                >
+                    {
+                        modifiedCardInfo &&
+                        <CardDetail streamId={modifiedCardInfo.streamId}
+                            cardId={modifiedCardInfo.cardId}
+                        />
+                    }
+                </MDrawer>
             </div>
             <ModifyStepModal streamId={id} />
         </Wrapper>

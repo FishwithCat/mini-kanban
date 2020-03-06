@@ -2,18 +2,27 @@ import { Card } from "@/model/card";
 import { TypedAction } from "@/model/action";
 import { Reducer } from "redux";
 import cardsActionKeys from "./cardsActionKeys";
-import { FetchCardsOfStepSuccessPayload, CreateCardSuccessPayload, MoveCardImmediatelyPayload } from "./cardsActions";
+import { FetchCardsOfStepSuccessPayload, CreateCardSuccessPayload, MoveCardImmediatelyPayload, SetModifiedCardPayload } from "./cardsActions";
 import { listImmutableDelete, listImmutableInsert } from "@/web/utils/immutable";
 
 export type CardsMap = Record<path, Card[]>
 
+export interface ModifiedCard {
+    streamId: string,
+    cardId: string,
+}
+
 type path = string
 export interface CardsState {
-    cardsMap: CardsMap
+    cardsMap: CardsMap,
+    modifiedCard: ModifiedCard | null,
+    cardDetail: Card | null
 }
 
 const initState: CardsState = {
-    cardsMap: {}
+    cardsMap: {},
+    modifiedCard: null,
+    cardDetail: null
 }
 
 export const cardsReducer: Reducer<CardsState, TypedAction> = (state = initState, action) => {
@@ -26,6 +35,8 @@ export const cardsReducer: Reducer<CardsState, TypedAction> = (state = initState
             return state
         case cardsActionKeys.moveCardImmediately:
             return handleMoveCardImmediateLy(state, action.payload)
+        case cardsActionKeys.setModifiedCard:
+            return handleSetModifiedCard(state, action.payload)
         default:
             return state
     }
@@ -69,5 +80,19 @@ const handleMoveCardImmediateLy = (state: CardsState, payload: MoveCardImmediate
     return {
         ...state,
         cardsMap
+    }
+}
+
+const handleSetModifiedCard = (state: CardsState, payload: SetModifiedCardPayload) => {
+    const { streamId, cardId } = payload
+    if (cardId == null) {
+        return {
+            ...state,
+            modifiedCard: null
+        }
+    }
+    return {
+        ...state,
+        modifiedCard: { streamId, cardId }
     }
 }

@@ -8,5 +8,8 @@ export default {
     moveCard: 'MOVE_CARD',
     moveCardSuccess: 'MOVE_CARD_SUCCESS',
     moveCardFailed: 'MOVE_CARD_FAILED',
-    moveCardImmediately: 'MOVE_CARD_IMMEDIATELY'
+    moveCardImmediately: 'MOVE_CARD_IMMEDIATELY',
+
+    setModifiedCard: 'SET_MODIFIED_CARD',
+
 }

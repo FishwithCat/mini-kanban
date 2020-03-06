@@ -9,4 +9,5 @@ export interface UserBaseInfo {
     name: string,
     id: string,
     ip?: IpAddr,
+    color?: string
 }

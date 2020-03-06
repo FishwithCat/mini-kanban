@@ -80,3 +80,12 @@ export const moveCardImmediately = (streamId: string, source: DragInfo, dest: Dr
     type: cardsActionKeys.moveCardImmediately,
     payload: { streamId, source, dest, newCard }
 })
+
+export interface SetModifiedCardPayload {
+    streamId: string,
+    cardId: string | null
+}
+export const setModifiedCard = (streamId: string, cardId: string | null): TypedAction<SetModifiedCardPayload> => ({
+    type: cardsActionKeys.setModifiedCard,
+    payload: { streamId, cardId }
+})

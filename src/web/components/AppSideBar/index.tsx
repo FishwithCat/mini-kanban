@@ -90,6 +90,11 @@ export const AppSideBar: React.FC<AppSideBarProps> = React.memo(props => {
                 <MSelect value={activeValueStreamId!}
                     onChange={switchValueStream}
                     bordered={false}
+                    style={{ width: '150px' }}
+                    showSearch
+                    filterOption={(input, option) =>
+                        Boolean(option) && option!.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
                 >
                     {
                         availableStreams.filter(stream => stream.id !== undefined)
@@ -104,10 +109,10 @@ export const AppSideBar: React.FC<AppSideBarProps> = React.memo(props => {
 
 
             <div className="menu-icons">
-                <MTooltip title="价值流设置">
+                <MTooltip title="看板设置">
                     <i className="iconfont icon-edit" onClick={showModifyStream} />
                 </MTooltip>
-                <MTooltip title="新建价值流">
+                <MTooltip title="新建看板">
                     <i className="iconfont icon-appstoreadd" onClick={showCreateValueStream} />
                 </MTooltip>
 

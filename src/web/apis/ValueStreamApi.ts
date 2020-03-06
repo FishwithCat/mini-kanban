@@ -21,7 +21,7 @@ export const renameValueStream = (streamId: string, newName: string) => {
 }
 
 export const deleteValueStream = (streamId: string) => {
-    return Request.delete(`/valueStream/${streamId}`).then(res => res.data)
+    return Request.delete(`/valueStream?id=${streamId}`).then(res => res.data)
 }
 
 // export const updateSteps = (streamId: string, newSteps: Step[]) => {

@@ -50,7 +50,7 @@ class ValueStreamDomain {
 
     deleteStep = async (valueStreamId: string, stepId: string) => {
         let steps: Step[] = await (await this.dbHandler).find({ id: valueStreamId }).get(`steps`).value()
-        if (!steps) return
+        if (!steps) return null
         steps = steps.filter(item => item.id !== stepId)
         return (await this.dbHandler).find({ id: valueStreamId }).set(`steps`, steps).write()
     }

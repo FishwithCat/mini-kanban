@@ -7,7 +7,7 @@ import { useCurrentUser } from '@/web/hooks/useCurrentUser';
 import { useDispatch } from 'react-redux';
 import { inviteMember, deleteMember } from '@/web/redux/valueStream/valueStreamActions';
 
-const COLORS = ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#F78DA7', '#9900EF']
+// const COLORS = ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#F78DA7', '#9900EF']
 
 interface MembersProps {
     streamId: string,
@@ -26,7 +26,7 @@ export const Members: React.FC<MembersProps> = React.memo(props => {
     }, [filter, members])
 
     const isCreator = React.useMemo(() => {
-        return members && currentUser?.id == members[0].id
+        return members && members.length > 0 && currentUser?.id == members[0].id
     }, [members, currentUser?.id])
 
     const onInviteMember = () => {
@@ -59,7 +59,7 @@ export const Members: React.FC<MembersProps> = React.memo(props => {
                         .map((member, index) => {
                             return (
                                 <MemberInfo key={member.id} member={member}
-                                    color={COLORS[index % COLORS.length]}
+                                    color={member.color ?? '#0693E3'}
                                     canDelete={member.id !== members![0].id}
                                     onDelete={onDeleteMember}
                                 />
