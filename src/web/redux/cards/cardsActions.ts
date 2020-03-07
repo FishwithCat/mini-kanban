@@ -89,3 +89,36 @@ export const setModifiedCard = (streamId: string, cardId: string | null): TypedA
     type: cardsActionKeys.setModifiedCard,
     payload: { streamId, cardId }
 })
+
+export interface FetchCardDetailPayload {
+    streamId: string,
+    cardId: string
+}
+export const fetchCardDetail = (streamId: string, cardId: string): TypedAction<FetchCardDetailPayload> => ({
+    type: cardsActionKeys.fetchCardDetail,
+    payload: { streamId, cardId }
+})
+
+export interface FetchCardDetailSuccessPayload { card: Card }
+export const fetchCardDetailSuccess = (card: Card): TypedAction<FetchCardDetailSuccessPayload> => ({
+    type: cardsActionKeys.fetchCardDetailSuccess,
+    payload: { card }
+})
+
+export interface UpdateCardPayload {
+    streamId: string,
+    card: Card
+}
+export const updateCard = (streamId: string, card: Card): TypedAction<UpdateCardPayload> => ({
+    type: cardsActionKeys.updateCard,
+    payload: { streamId, card }
+})
+
+export interface UpdateCardSuccessPayload {
+    streamId: string,
+    card: Card
+}
+export const updateCardSuccess = (streamId: string, card: Card): TypedAction<UpdateCardSuccessPayload> => ({
+    type: cardsActionKeys.updateCardSuccess,
+    payload: { streamId, card }
+})

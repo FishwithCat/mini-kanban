@@ -1,4 +1,7 @@
 export default {
+    fetchCardDetail: 'FETCH_CARD_DETAIL',
+    fetchCardDetailSuccess: 'FETCH_CARD_DETAIL_SUCCESS',
+
     createCard: 'CREATE_CARD',
     createCardSuccess: 'CREATE_CARD_SUCCESS',
 
@@ -12,4 +15,6 @@ export default {
 
     setModifiedCard: 'SET_MODIFIED_CARD',
 
+    updateCard: 'UPDATE_CARD',
+    updateCardSuccess: 'UPDATE_CARD_SUCCESS',
 }

@@ -67,8 +67,11 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                exclude: /node_modules/, // 不解析 node_modules
-                use: ['style-loader', 'css-loader']
+                // exclude: /node_modules/, // 不解析 node_modules
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' }
+                ]
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf|svg)$/,

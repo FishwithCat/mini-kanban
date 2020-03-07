@@ -8,6 +8,7 @@ import { MMenu, MenuItem } from '@/web/components/MMenu';
 
 
 interface MemberTagProps {
+    className?: string,
     members: UserBaseInfo[],
     participants: UserBaseInfo[],
     onChange(participants: UserBaseInfo[]): void
@@ -26,10 +27,10 @@ export const MemberTag: React.FC<MemberTagProps> = React.memo(props => {
     }
 
     const menu = (
-        <MMenu>
+        <MMenu className={props.className}>
             {
                 members.map(member => (
-                    <StyledMenuItem key={member.id}
+                    <StyledMenuItem key={member.id} className="member-tags"
                         disabled={participants.findIndex(item => item.id === member.id) >= 0}
                         onClick={() => onChoseMember(member)}>
                         <i className="iconfont icon-edit" />
@@ -48,7 +49,7 @@ export const MemberTag: React.FC<MemberTagProps> = React.memo(props => {
             <div>
                 {
                     participants.map(member => (
-                        <StyledChip key={member.id}
+                        <StyledChip key={member.id} className="member-tag"
                             closable
                             onClose={() => handleDelete(member)}
                         >
@@ -64,7 +65,7 @@ export const MemberTag: React.FC<MemberTagProps> = React.memo(props => {
 const StyledChip = styled(MChip)`
     background: transparent;
     margin-bottom: 2px;
-    margin-right: 3px;
+    margin-right: 5px;
 `
 
 const MemberTagWrapper = styled.div`

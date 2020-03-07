@@ -4,7 +4,7 @@ import { TypedAction } from "@/model/action";
 import { store } from '@/web/redux/create-store';
 import {
     CreateCardPayload, createCardSuccess,
-    FetchCardsOfStepPayload, fetchCardsOfStepSuccess, MoveCardPayload, moveCardFailed, moveCardImmediately
+    FetchCardsOfStepPayload, fetchCardsOfStepSuccess, MoveCardPayload, moveCardFailed, moveCardImmediately, FetchCardDetailPayload, fetchCardDetailSuccess, UpdateCardPayload, updateCardSuccess
 } from "./cardsActions";
 import { DragInfo, Card } from '@/model/card';
 import { CardsMap } from './cardsReducer';
@@ -65,11 +65,45 @@ function* moveCard(action: TypedAction<MoveCardPayload>) {
 
         if (!result && !result.id) {
             yield put(moveCardFailed(streamId, prevCardMap))
+        } else {
+            yield put(updateCardSuccess(streamId, result))
         }
     } catch (error) {
         console.error('error', error)
         yield put(moveCardFailed(streamId, prevCardMap))
     }
+}
+
+function* fetchCardDetail(action: TypedAction<FetchCardDetailPayload>) {
+    const payload = action.payload!
+    const { streamId, cardId } = payload
+    try {
+        const result = yield call(action => {
+            return CardsApi.queryCard(streamId, cardId)
+        }, null)
+        if (result && result.id) {
+            yield put(fetchCardDetailSuccess(result))
+        }
+    } catch (error) {
+        console.error('error', error)
+    }
+}
+
+function* updateCard(action: TypedAction<UpdateCardPayload>) {
+    const payload = action.payload!
+    const { streamId, card } = payload
+    if (!card.id || !streamId) return
+    try {
+        const result = yield call(action => {
+            return CardsApi.updateCard(streamId, card)
+        }, null)
+        if (result && result.id) {
+            yield put(updateCardSuccess(streamId, result))
+        }
+    } catch (error) {
+
+    }
+
 }
 
 const _getCardList = (streamId: string, stepId: string, cardsMap: CardsMap) => {
@@ -91,5 +125,7 @@ const _generateNewPosition = (cardList: Card[], index: number) => {
 export default {
     createCard,
     fetchCardsOfStep,
-    moveCard
+    moveCard,
+    fetchCardDetail,
+    updateCard
 }

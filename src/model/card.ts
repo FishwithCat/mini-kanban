@@ -1,4 +1,4 @@
-import { UserBaseInfo } from "./user";
+import { UserBaseInfo, User } from "./user";
 
 export interface TimePoint {
     stepId: string,
@@ -7,13 +7,15 @@ export interface TimePoint {
 
 export enum Priority {
     low,
-    high
+    default,
+    high,
+    urgent
 }
 
 export interface CardInfo {
     title: string,
     stepId: string,
-    describe?: string,
+    describe?: any, // Delta
     participants?: UserBaseInfo[],
     timeLine?: TimePoint[],
     priority?: Priority,
@@ -32,4 +34,10 @@ export interface DragInfo {
 export interface CardPosition {
     stepId: string,
     position: number
+}
+
+export interface Discuss {
+    id: string,
+    user: User,
+    content: string
 }

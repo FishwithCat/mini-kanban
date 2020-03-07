@@ -6,6 +6,8 @@ import { EmptyArray } from '@/model/empty';
 import { MTooltip } from '@/web/components/MTooltip';
 import { UserBaseInfo } from '@/model/user';
 import { useValueStreamMembers } from '@/web/hooks/useValueStreamMembers';
+import dayjs from 'dayjs'
+
 
 
 interface DraggableCardViewProps {
@@ -70,22 +72,45 @@ export const CardView: React.FC<CardViewProps> = React.memo(props => {
         return memberInfo?.color ?? '#333'
     }
 
+    const blockMessage = React.useMemo(() => {
+        const { timeLine } = card
+        if (!timeLine || timeLine.length < 1) return { color: 'transparent', message: null }
+        const count = Math.abs(new Date().valueOf() - timeLine[timeLine.length - 1].timeStamp) / 1000 / 86400
+        let color = '#333'
+        if (count > 7) color = '#ff9800'
+        else if (count > 14) color = '#f44336'
+        return {
+            color,
+            message: count >= 1 ? `${Math.floor(count)}天` : null
+        }
+    }, [card.timeLine])
+
     return (
         <Wrapper className="card-view" onClick={onClickCard}>
-            <div className="content">
+            <div className="left">
                 <div className="title">{card.title}</div>
             </div>
-            <MTooltip title={participants.map(member => member.name).join(', ')}>
-                <div className="participants">
-                    {
-                        participants
-                            .slice(0, 3)
-                            .map((member: UserBaseInfo) => {
-                                return <div className="name" style={{ color: getColor(member.id) }}>{member.name}</div>
-                            })
-                    }
-                </div>
-            </MTooltip>
+            <div className="right">
+                <MTooltip title="停留时间">
+                    <div className="block-time">
+                        {
+                            blockMessage.message
+                        }
+                    </div>
+                </MTooltip>
+                <MTooltip title={participants.map(member => member.name).join(', ')}>
+                    <div className="participants">
+                        {
+                            participants
+                                .slice(0, 2)
+                                .map((member: UserBaseInfo) => {
+                                    return <div className="name" style={{ color: getColor(member.id) }}>{member.name}</div>
+                                })
+                        }
+                    </div>
+                </MTooltip>
+            </div>
+
         </Wrapper>
     )
 })
@@ -99,7 +124,7 @@ const Wrapper = styled.div`
     display: flex;
     padding: 10px;
 
-    .content {
+    .left {
         flex: 1;
         overflow: hidden;
 
@@ -113,19 +138,28 @@ const Wrapper = styled.div`
         }
     }
 
-    .participants {
+    .right {
         flex-shrink: 0;
-        overflow: hidden;
-        text-align: right;
 
-        .name {
-            border-radius: 4px;
+        .block-time {
+            text-align: right;
             line-height: 20px;
-            height: 20px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .participants {
             overflow: hidden;
-            text-overflow: ellipsis;
+            text-align: right;
+
+            .name {
+                border-radius: 4px;
+                line-height: 20px;
+                height: 20px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         }
     }
-
    
 `

@@ -2,8 +2,15 @@ import { Card } from "@/model/card";
 import { TypedAction } from "@/model/action";
 import { Reducer } from "redux";
 import cardsActionKeys from "./cardsActionKeys";
-import { FetchCardsOfStepSuccessPayload, CreateCardSuccessPayload, MoveCardImmediatelyPayload, SetModifiedCardPayload } from "./cardsActions";
+import {
+    FetchCardsOfStepSuccessPayload, CreateCardSuccessPayload,
+    MoveCardImmediatelyPayload, SetModifiedCardPayload,
+    FetchCardDetailSuccessPayload,
+    UpdateCardSuccessPayload
+} from "./cardsActions";
 import { listImmutableDelete, listImmutableInsert } from "@/web/utils/immutable";
+import { EmptyArray } from "@/model/empty";
+import { immutableUpdateObjList } from "@/model/utils";
 
 export type CardsMap = Record<path, Card[]>
 
@@ -37,6 +44,10 @@ export const cardsReducer: Reducer<CardsState, TypedAction> = (state = initState
             return handleMoveCardImmediateLy(state, action.payload)
         case cardsActionKeys.setModifiedCard:
             return handleSetModifiedCard(state, action.payload)
+        case cardsActionKeys.fetchCardDetailSuccess:
+            return handleFetchCardDetailSuccess(state, action.payload)
+        case cardsActionKeys.updateCardSuccess:
+            return handleUpdateCardSuccess(state, action.payload)
         default:
             return state
     }
@@ -94,5 +105,28 @@ const handleSetModifiedCard = (state: CardsState, payload: SetModifiedCardPayloa
     return {
         ...state,
         modifiedCard: { streamId, cardId }
+    }
+}
+
+const handleFetchCardDetailSuccess = (state: CardsState, payload: FetchCardDetailSuccessPayload) => {
+    const { card } = payload
+    if (!card?.id) return state
+    return {
+        ...state,
+        cardDetail: card
+    }
+}
+
+const handleUpdateCardSuccess = (state: CardsState, payload: UpdateCardSuccessPayload) => {
+    const { streamId, card } = payload
+    if (!streamId || !card.id) return state
+    const { stepId } = card
+    const path = `${streamId}/${stepId}`
+    const cardsMap = { ...state.cardsMap }
+    cardsMap[path] = immutableUpdateObjList((cardsMap[path] ?? EmptyArray), card, 'id')
+    return {
+        ...state,
+        cardsMap,
+        modifiedCard: null
     }
 }

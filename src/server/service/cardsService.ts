@@ -50,4 +50,14 @@ cardsRouter.put('/move', async (ctx, next) => {
     ctx.body = await cardsDomain.updateCardPosition(cardId, stepId, position)
 })
 
+/** 更新卡片内容 */
+cardsRouter.put('/', async (ctx, next) => {
+    const { streamId, card } = ctx.request.body
+    if (!streamId || !card.id) {
+        return
+    }
+    const cardsDomain = getCardsDomain(streamId)
+    ctx.body = await cardsDomain.updateCardInfo(card)
+})
+
 export default cardsRouter

@@ -39,6 +39,17 @@ class CardsDomain {
             .set('timeLine', timeLime)
             .write()
     }
+
+    updateCardInfo = async (card: Card) => {
+        const { describe, priority, title, participants } = card
+        return (await this.dbHandler).find({ id: card.id })
+            .set('describe', describe)
+            .set('priority', priority)
+            .set('title', title)
+            .set('participants', participants)
+            .write()
+
+    }
 }
 
 export default CardsDomain
