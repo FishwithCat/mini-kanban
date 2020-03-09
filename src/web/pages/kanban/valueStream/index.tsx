@@ -66,6 +66,7 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
         <Wrapper className="value-stream">
             <Menu className="menu">
                 <div className="left">
+                    <i className="iconfont refresh" />
                 </div>
                 <div className="right">
                     <i className="iconfont icon-team" onClick={() => setShowMembers(true)} />

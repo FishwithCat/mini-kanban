@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '@/model/card';
+import { Card, Priority } from '@/model/card';
 import styled from 'styled-components';
 import { DraggableProvided, DraggingStyle } from 'react-beautiful-dnd';
 import { EmptyArray } from '@/model/empty';
@@ -7,6 +7,7 @@ import { MTooltip } from '@/web/components/MTooltip';
 import { UserBaseInfo } from '@/model/user';
 import { useValueStreamMembers } from '@/web/hooks/useValueStreamMembers';
 import dayjs from 'dayjs'
+import { priorityColorMap } from '@/web/utils/colors';
 
 
 
@@ -67,9 +68,13 @@ export const CardView: React.FC<CardViewProps> = React.memo(props => {
         return card.participants ?? EmptyArray
     }, [card])
 
-    const getColor = (memberId: string) => {
+    const getMemberColor = (memberId: string) => {
         const memberInfo = members.find(member => member.id === memberId)
         return memberInfo?.color ?? '#333'
+    }
+
+    const getPriorityColor = (priority: Priority): string => {
+        return priorityColorMap[priority]
     }
 
     const blockMessage = React.useMemo(() => {
@@ -86,7 +91,9 @@ export const CardView: React.FC<CardViewProps> = React.memo(props => {
     }, [card.timeLine])
 
     return (
-        <Wrapper className="card-view" onClick={onClickCard}>
+        <Wrapper className="card-view" onClick={onClickCard}
+            style={{ borderLeft: `4px solid ${getPriorityColor(card.priority ?? Priority.default)}` }}
+        >
             <div className="left">
                 <div className="title">{card.title}</div>
             </div>
@@ -104,7 +111,7 @@ export const CardView: React.FC<CardViewProps> = React.memo(props => {
                             participants
                                 .slice(0, 2)
                                 .map((member: UserBaseInfo) => {
-                                    return <div className="name" style={{ color: getColor(member.id) }}>{member.name}</div>
+                                    return <div className="name" style={{ color: getMemberColor(member.id) }}>{member.name}</div>
                                 })
                         }
                     </div>
@@ -118,11 +125,16 @@ export const CardView: React.FC<CardViewProps> = React.memo(props => {
 const Wrapper = styled.div`
     box-sizing: border-box;
     background-color: #fff;
-    border-radius: 4px;
     box-shadow: 0 1px 2px 0px rgba(0, 0, 0, .1);
     height: 100%;
     display: flex;
     padding: 10px;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+    &:hover {
+        background-color: #fafafa;
+    }
 
     .left {
         flex: 1;

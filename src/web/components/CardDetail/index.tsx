@@ -13,13 +13,14 @@ import { UserBaseInfo } from '@/model/user';
 import { MButton } from '../MButton';
 import { MDropDown } from '../MDropdown';
 import { MMenu, MenuItem } from '../MMenu';
+import { priorityColorMap } from '@/web/utils/colors';
 
 
 const priorityChoices = [
-    { name: '默认', value: Priority.default, color: '#2196f3' },
-    { name: '低', value: Priority.low, color: '#8c8c8c' },
-    { name: '高', value: Priority.high, color: '#ff9800' },
-    { name: '紧急', value: Priority.urgent, color: '#f44336' },
+    { name: '默认', value: Priority.default },
+    { name: '高', value: Priority.high },
+    { name: '低', value: Priority.low },
+    { name: '紧急', value: Priority.urgent },
 ]
 
 
@@ -60,8 +61,7 @@ export const CardDetail: React.FC<CardDetailProps> = React.memo(props => {
     }
 
     const getPriorityColor = (priority: Priority): string => {
-        const match = priorityChoices.find(item => item.value === priority)
-        return match?.color ?? priorityChoices[0].color
+        return priorityColorMap[priority]
     }
 
     const getPriorityBoxStyle = (priority: Priority): React.CSSProperties => {
