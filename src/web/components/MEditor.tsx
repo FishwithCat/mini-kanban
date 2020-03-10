@@ -7,17 +7,19 @@ import 'react-quill/dist/quill.snow.css';
 type Delta = any
 
 interface MEditorProps {
-    defaultValue: Delta | undefined,
+    value?: Delta | undefined,
+    defaultValue?: Delta | undefined,
     modules: any,
     style?: React.CSSProperties,
     onChange(newValue: Delta): void
 }
 export const MEditor: React.FC<MEditorProps> = React.memo(props => {
 
-    const { defaultValue, modules, style } = props
+    const { value, defaultValue, modules, style } = props
 
     return (
         <StyledReactQuill
+            value={value}
             defaultValue={defaultValue}
             theme="snow"
             modules={modules}

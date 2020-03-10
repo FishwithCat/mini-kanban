@@ -149,7 +149,7 @@ export const CardDetail: React.FC<CardDetailProps> = React.memo(props => {
 
                     </FormItem>
                     <MEditor
-                        defaultValue={cardToEdit.describe}
+                        value={cardToEdit.describe}
                         modules={quillModules}
                         onChange={onDescribeChange}
                     />

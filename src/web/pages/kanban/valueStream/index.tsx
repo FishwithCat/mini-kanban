@@ -100,6 +100,7 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                     onClose={() => setShowMembers(false)}
                     getContainer={false}
                     style={{ position: 'absolute' }}
+                    destroyOnClose
                 >
                     <Members
                         streamId={id}

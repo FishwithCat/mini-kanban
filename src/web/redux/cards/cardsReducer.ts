@@ -44,6 +44,8 @@ export const cardsReducer: Reducer<CardsState, TypedAction> = (state = initState
             return handleMoveCardImmediateLy(state, action.payload)
         case cardsActionKeys.setModifiedCard:
             return handleSetModifiedCard(state, action.payload)
+        case cardsActionKeys.fetchCardDetail:
+            return { ...state, cardDetail: null }
         case cardsActionKeys.fetchCardDetailSuccess:
             return handleFetchCardDetailSuccess(state, action.payload)
         case cardsActionKeys.updateCardSuccess:
