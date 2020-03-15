@@ -85,7 +85,10 @@ export const AppSideBar: React.FC<AppSideBarProps> = React.memo(props => {
 
     return (
         <AppSideBarWrapper className="app-side-bar">
-            <img src={logo} className="logo" />
+            {/* <img src={logo} className="logo" /> */}
+            <div className="logo" style={{ backgroundColor: '#8ED1FC' }}>
+                {(currentUser?.name ?? 'Na').slice(-2)}
+            </div>
             <div className="switch-stream-area">
                 <MSelect value={activeValueStreamId!}
                     onChange={switchValueStream}
@@ -155,7 +158,12 @@ const AppSideBarWrapper = styled.div`
     display: flex;
 
     .logo {
+        font-size: 12px;
         height: 32px;
+        line-height: 32px;
+        width: 32px;
+        border-radius: 50%;
+        text-align: center;
         flex-shrink: 0;
     }
 
@@ -182,16 +190,16 @@ const AppSideBarWrapper = styled.div`
     }
 `
 
-const LogoutBtn = styled.i`
-    cursor: pointer;
-    font-size: 20px;
-    height: 32px;
-    line-height: 32px;
-    text-align: center;
-    margin: 0 auto;
-    flex-shrink: 0;
+// const LogoutBtn = styled.i`
+//     cursor: pointer;
+//     font-size: 20px;
+//     height: 32px;
+//     line-height: 32px;
+//     text-align: center;
+//     margin: 0 auto;
+//     flex-shrink: 0;
 
-    &:hover {
-        color: #f44336;
-    }
-`
+//     &:hover {
+//         color: #f44336;
+//     }
+// `
