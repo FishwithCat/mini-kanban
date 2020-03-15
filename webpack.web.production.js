@@ -23,7 +23,6 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './src/web/index.html'
         }),
-        new webpack.HotModuleReplacementPlugin(),
     ],
     module: {
         rules: [
@@ -59,7 +58,7 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                exclude: /node_modules/, // 不解析 node_modules
+                // exclude: /node_modules/, // 不解析 node_modules
                 use: ['style-loader', 'css-loader']
             },
             {

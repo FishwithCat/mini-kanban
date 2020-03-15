@@ -1,7 +1,7 @@
-import { app, BrowserWindow } from 'electron';
-import { startServer } from './server';
-import path from 'path';
-const serverPort = 3000
+import { app, BrowserWindow } from 'electron'
+import { startServer } from './server'
+
+const serverPort = 3001
 
 const createWindow = () => {
     // Create the browser window.
@@ -13,14 +13,18 @@ const createWindow = () => {
 
         webPreferences: {
             nodeIntegration: true,
-            webSecurity: true
+            webSecurity: false
         }
     })
+
+    // and load the index.html of the app.
+    // win.loadFile('index.html')
+
     // win.maximize()
 
     // Open the DevTools.
     win.loadURL('http://localhost:3000')
-    // win.webContents.openDevTools()
+    win.webContents.openDevTools()
 }
 app.allowRendererProcessReuse = true
 // This method will be called when Electron has finished
@@ -48,4 +52,4 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-startServer(serverPort, path.resolve(__dirname)) 
+startServer(serverPort)

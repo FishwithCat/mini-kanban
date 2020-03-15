@@ -2,12 +2,11 @@ const path = require('path')
 
 module.exports = {
     target: 'electron-main',
-    mode: process.env.ENV || 'development',
-    entry: {
-        main: './src/main.ts'
-    },
     output: {
         path: path.resolve(__dirname, '.webpack')
+    },
+    node: {
+        __dirname: false
     },
     module: {
         rules: [

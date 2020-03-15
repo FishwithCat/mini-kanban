@@ -3,10 +3,15 @@ import bodyParser from 'koa-bodyparser';
 import cardsRouter from './service/cardsService';
 import userRouter from './service/userService';
 import valueStreamRouter from './service/valueStreamService';
+import koaStatic from 'koa-static';
 
-export const startServer = (port: number): void => {
+export const startServer = (port: number, indexPagePath: string | null = null): void => {
     const app = new Koa()
     app.use(bodyParser())
+
+    if (indexPagePath) {
+        app.use(koaStatic(indexPagePath))
+    }
 
     app.use(cardsRouter.routes())
     app.use(userRouter.routes())
