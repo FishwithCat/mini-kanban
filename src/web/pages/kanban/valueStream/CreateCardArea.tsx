@@ -129,8 +129,8 @@ const CreateCardBoxWrapper = styled.div`
         > .button {
             float: left;
             margin-right: 10px;
-            line-height: 22px;
-            height: 22px;
+            line-height: 28px;
+            height: 28px;
             padding: 0 10px;
             cursor: pointer;
 

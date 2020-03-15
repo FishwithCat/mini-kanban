@@ -99,7 +99,7 @@ export const CardView: React.FC<CardViewProps> = React.memo(props => {
             </div>
             <div className="right">
                 <MTooltip title="停留时间">
-                    <div className="block-time">
+                    <div className="block-time" style={{ color: blockMessage.color }}>
                         {
                             blockMessage.message
                         }
