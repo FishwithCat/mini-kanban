@@ -117,7 +117,7 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                         streamId={id}
                     />
                 </MDrawer>
-                <MDrawer
+                <VisibleDrawer
                     visible={Boolean(modifiedCardInfo)}
                     onClose={onCloseModifiedCardModal}
                     placement="right"
@@ -130,7 +130,7 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                             cardId={modifiedCardInfo.cardId}
                         />
                     }
-                </MDrawer>
+                </VisibleDrawer>
                 <MModal visible={Boolean(stepToDelete)}
                     onOk={onDeleteStep}
                     onCancel={onCancelDeleteStep}
@@ -222,5 +222,12 @@ const Wrapper = styled.div`
 const DeleteStepWrapper = styled.div`
     h2 {
         font-weight: 400;
+    }
+`
+
+const VisibleDrawer = styled(MDrawer)`
+    .ant-drawer-content,
+    .ant-drawer-body {
+        overflow: visible
     }
 `

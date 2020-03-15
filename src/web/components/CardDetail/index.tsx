@@ -170,7 +170,6 @@ const Wrapper = styled.div`
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 
     .header {
         padding: 20px 20px 0;
