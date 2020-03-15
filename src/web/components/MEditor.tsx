@@ -15,7 +15,6 @@ interface MEditorProps {
 export const MEditor: React.FC<MEditorProps> = React.memo(props => {
 
     const { value, defaultValue, modules, style } = props
-    console.log('>>>>>value', value)
 
     const onChange = React.useCallback((content, delta, source, editor) => {
         props.onChange(editor.getContents())
