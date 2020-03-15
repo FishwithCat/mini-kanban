@@ -6,11 +6,10 @@
     "main": ".webpack/main.js",
     "scripts": {
         "web": "ENV=development webpack-dev-server --config ./webpack.web.development.js --host=0.0.0.0 --port=3000",
-        "server": "webpack --config ./webpack.main.development.js",
+        "server-dev": "webpack --config ./webpack.main.development.js",
         "build": "ENV=production webpack --config ./webpack.config.js",
         "run-electron": "electron .webpack/main.js",
-        "electron-package": "ENV=production electron-packager . --out ./out --overwrite ",
-        "test": "webpack --config ./webpack.main.production.js"
+        "electron-package": "ENV=production electron-packager . --out ./out --overwrite "
     },
     "dependencies": {
         "antd": "^4.0.0",
