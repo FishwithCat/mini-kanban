@@ -47,10 +47,22 @@ const handleLoginSuccess = (state: UserState, payload: LoginSuccessPayload) => {
     if (!name) return state
     const availableStreamMap = { ...state.availableStreamMap }
     let activeStreamId = null
+    const localStorageStreamId = localStorage.getItem('active')
+
     if (available.length > 0) {
-        activeStreamId = available[0].id
+        if (localStorageStreamId && available.findIndex(stream => stream.id === localStorageStreamId)) {
+            activeStreamId = localStorageStreamId
+        } else {
+            activeStreamId = available[0].id
+        }
     }
     availableStreamMap[id] = available ?? EmptyArray
+
+    localStorage.setItem('currentUser', JSON.stringify(({ id, name })))
+    if (activeStreamId) {
+        localStorage.setItem('active', activeStreamId)
+    }
+
     return {
         ...state,
         currentUser: { id, name },
@@ -60,6 +72,8 @@ const handleLoginSuccess = (state: UserState, payload: LoginSuccessPayload) => {
 }
 
 const handleLogout = (state: UserState): UserState => {
+    localStorage.removeItem('currentUser')
+
     return {
         ...state,
         currentUser: null
@@ -68,6 +82,9 @@ const handleLogout = (state: UserState): UserState => {
 
 const handleSetActiveKanban = (state: UserState, payload: SetActiveValueStreamPayload) => {
     const { streamId } = payload
+
+    if (streamId) localStorage.setItem('active', streamId)
+
     return {
         ...state,
         activeStreamId: streamId
