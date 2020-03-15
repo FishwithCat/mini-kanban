@@ -74,7 +74,10 @@ export const StepView: React.FC<StepViewProps> = React.memo(props => {
     return (
         <Wrapper className="step">
             <div className="step-head" style={StepHeadStyle}>
-                <div className="title">{step.name}</div>
+                <div className="title">
+                    <div className="name">{step.name}</div>
+                    <div className="badge">{cards.length}</div>
+                </div>
                 <div className="tools">
                     {
                         canCreateCard &&
@@ -145,7 +148,19 @@ const Wrapper = styled.div`
 
         > .title {
             flex: 1;
+            display: flex;
             padding: 0 10px;
+            overflow: hidden;
+
+            .name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .badge {
+                margin-left: 10px;
+                flex-shrink: 0;
+            }
         }
 
         > .tools {
