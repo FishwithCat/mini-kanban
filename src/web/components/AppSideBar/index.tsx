@@ -89,27 +89,29 @@ export const AppSideBar: React.FC<AppSideBarProps> = React.memo(props => {
             <div className="logo" style={{ backgroundColor: '#8ED1FC' }}>
                 {(currentUser?.name ?? 'Na').slice(-2)}
             </div>
-            <div className="switch-stream-area">
-                <MSelect value={activeValueStreamId!}
-                    onChange={switchValueStream}
-                    bordered={false}
-                    style={{ width: '150px' }}
-                    showSearch
-                    filterOption={(input, option) =>
-                        Boolean(option) && option!.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    }
-                >
-                    {
-                        availableStreams.filter(stream => stream.id !== undefined)
-                            .map(stream => (
-                                <Option value={stream.id!}>
-                                    {stream.name}
-                                </Option>
-                            ))
-                    }
-                </MSelect>
-            </div>
-
+            {
+                availableStreams.length > 0 &&
+                <div className="switch-stream-area">
+                    <MSelect value={activeValueStreamId!}
+                        onChange={switchValueStream}
+                        bordered={false}
+                        style={{ width: '150px' }}
+                        showSearch
+                        filterOption={(input, option) =>
+                            Boolean(option) && option!.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                    >
+                        {
+                            availableStreams.filter(stream => stream.id !== undefined)
+                                .map(stream => (
+                                    <Option value={stream.id!}>
+                                        {stream.name}
+                                    </Option>
+                                ))
+                        }
+                    </MSelect>
+                </div>
+            }
 
             <div className="menu-icons">
                 <MTooltip title="看板设置">
