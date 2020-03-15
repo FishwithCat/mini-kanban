@@ -115,7 +115,7 @@ export const CardDetail: React.FC<CardDetailProps> = React.memo(props => {
                 {
                     cardDetail?.timeLine && cardDetail?.timeLine.length > 0 &&
                     <TimeStamp>
-                        {dayjs(cardDetail.timeLine[0].timeStamp).format('YYYY/MM/DD hh:mm')}
+                        {dayjs(cardDetail.timeLine[0].timeStamp).format('YYYY/MM/DD HH:mm')}
                     </TimeStamp>
 
                 }
