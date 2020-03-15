@@ -7,7 +7,7 @@ import { useCardsOfStep } from '@/web/hooks/useCardsOfStep';
 import { useDispatch } from 'react-redux';
 import { createCard, fetchCardsOfStep } from '@/web/redux/cards/cardsActions';
 import { StepContent } from './StepContent';
-import { deleteStep, setModifiedStep } from '@/web/redux/valueStream/valueStreamActions';
+import { deleteStep, setModifiedStep, setStepToDelete } from '@/web/redux/valueStream/valueStreamActions';
 import { Separator } from '@/web/components/Separator';
 import { MDropDown } from '@/web/components/MDropdown';
 import { MMenu, MenuItem } from '@/web/components/MMenu';
@@ -38,10 +38,9 @@ export const StepView: React.FC<StepViewProps> = React.memo(props => {
 
     const onCancelCreate = React.useCallback(() => setShowCreateBox(false), [])
 
-
     const onDeleteStep = React.useCallback(() => {
-        dispatch(deleteStep(streamId, step.id))
-    }, [streamId, step.id])
+        dispatch(setStepToDelete(step))
+    }, [step])
 
     const onModifyStep = React.useCallback((e: ClickParam) => {
         dispatch(setModifiedStep(step))
@@ -114,6 +113,14 @@ const StyledMenuItem = styled(MenuItem)`
     .name {
         flex: 1;
         text-align: center;
+    }
+
+    &:hover {
+        color: #2196f3;
+    }
+
+    &.danger:hover {
+        color: #ff4d4f;
     }
 `
 

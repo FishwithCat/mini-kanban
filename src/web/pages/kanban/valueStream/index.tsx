@@ -8,11 +8,12 @@ import { StepView } from './StepView';
 import { DragDropContext, DropResult, DraggableLocation } from 'react-beautiful-dnd';
 import { moveCard, setModifiedCard } from '@/web/redux/cards/cardsActions';
 import { ModifyStepModal } from '../components/ModifyStep/ModifyStepModal';
-import { updateStep, fetchValueStream, fetchValueStreamMembers } from '@/web/redux/valueStream/valueStreamActions';
+import { updateStep, fetchValueStream, fetchValueStreamMembers, deleteStep, setStepToDelete } from '@/web/redux/valueStream/valueStreamActions';
 import { Members } from '../components/Members';
 import { MDrawer } from '@/web/components/MDrawer';
 import { RootState } from '@/web/redux/create-store';
 import { CardDetail } from '@/web/components/CardDetail';
+import { MModal } from '@/web/components/MModal';
 
 
 interface ValueStreamProps {
@@ -27,13 +28,23 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
     const valueStream = useValueStream(id)
 
     const modifiedCardInfo = useSelector((state: RootState) => state.cardsReducer.modifiedCard)
+    const stepToDelete = useSelector((state: RootState) => state.valueStreamReducer.stepToDelete)
 
     const onCreateStep = React.useCallback(() => {
         dispatch(updateStep(id, {
             id: generate(),
             name: '新步骤'
         }))
-    }, [dispatch, id])
+    }, [id])
+
+    const onDeleteStep = React.useCallback(() => {
+        if (!stepToDelete) return
+        dispatch(deleteStep(id, stepToDelete.id))
+    }, [id, stepToDelete])
+
+    const onCancelDeleteStep = React.useCallback(() => {
+        dispatch(setStepToDelete(null))
+    }, [])
 
     const onCloseModifiedCardModal = React.useCallback(() => {
         dispatch(setModifiedCard(id, null))
@@ -120,6 +131,26 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                         />
                     }
                 </MDrawer>
+                <MModal visible={Boolean(stepToDelete)}
+                    onOk={onDeleteStep}
+                    onCancel={onCancelDeleteStep}
+                    okText='删除'
+                    cancelText='取消'
+                    okType="danger"
+                >
+                    {
+                        stepToDelete &&
+                        <DeleteStepWrapper>
+                            <h2>
+                                确认删除 {stepToDelete.name} ?
+                            </h2>
+                            <div>
+                                步骤下卡片可能会丢失
+                            </div>
+                        </DeleteStepWrapper>
+
+                    }
+                </MModal>
             </div>
             <ModifyStepModal streamId={id} />
         </Wrapper>
@@ -186,5 +217,10 @@ const Wrapper = styled.div`
             }
         }
     }
+`
 
+const DeleteStepWrapper = styled.div`
+    h2 {
+        font-weight: 400;
+    }
 `

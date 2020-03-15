@@ -20,8 +20,8 @@ export default {
     deleteValueStreamSuccess: 'DELETE_VALUE_STREAM_SUCCESS',
 
     setModifiedStep: 'SET_MODIFIED_STEP',
-
     setModifiedValueStream: 'SET_MODIFIED_VALUE_STREAM',
+    setStepToDelete: 'SET_STEP_TO_DELETE',
 
     inviteMember: 'INVITE_MEMBER',
     deleteMember: 'DELETE_MEMBER',

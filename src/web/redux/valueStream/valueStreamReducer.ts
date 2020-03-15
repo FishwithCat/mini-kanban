@@ -6,7 +6,7 @@ import {
     DeleteValueStreamSuccessPayload, UpdateStepsSuccessPayload,
     SetModifiedStepPayload, FetchValueStreamMembersSuccessPayload,
     UpdateMemberSuccessPayload,
-    SetModifiedValueStreamPayload, RenameValueStreamSuccessPayload
+    SetModifiedValueStreamPayload, RenameValueStreamSuccessPayload, SetStepToDeletePayload
 } from "./valueStreamActions";
 import { ValueStream, ValueStreamStruct, Step, ValueStreamBaseInfo } from "@/model/ValueStream";
 import { UserBaseInfo } from "@/model/user";
@@ -16,6 +16,7 @@ export interface ValueStreamState {
     valueStreamStructMap: Record<string, ValueStreamStruct>,
     vsMemberMap: Record<string, UserBaseInfo[]>,
     modifiedStep: Step | null,
+    stepToDelete: Step | null,
     modifiedValueStream: ValueStreamBaseInfo | null
 }
 
@@ -23,6 +24,7 @@ const initState = {
     valueStreamStructMap: {},
     vsMemberMap: {},
     modifiedStep: null,
+    stepToDelete: null,
     modifiedValueStream: null
 }
 
@@ -38,6 +40,8 @@ export const valueStreamReducer: Reducer<ValueStreamState, TypedAction> = (state
             return handleRenameValueStreamSuccess(state)
         case valueStreamActionKeys.deleteValueStreamSuccess:
             return handleDeleteValueStreamSuccess(state, action.payload)
+        case valueStreamActionKeys.setStepToDelete:
+            return handleSetStepToDelete(state, action.payload)
         case valueStreamActionKeys.updateStepsSuccess:
             return handleUpdateStepsSuccess(state, action.payload)
         case valueStreamActionKeys.setModifiedStep:
@@ -79,7 +83,7 @@ const handleCreateValueStreamSuccess = (state: ValueStreamState, payload: Create
     }
 }
 
-const handleRenameValueStreamSuccess = (state: ValueStreamState) => {
+const handleRenameValueStreamSuccess = (state: ValueStreamState): ValueStreamState => {
     return {
         ...state,
         modifiedValueStream: null
@@ -94,7 +98,7 @@ const _updateValueStream = (valueStreamStructMap: Record<string, ValueStreamStru
     return newMap
 }
 
-const handleDeleteValueStreamSuccess = (state: ValueStreamState, payload: DeleteValueStreamSuccessPayload) => {
+const handleDeleteValueStreamSuccess = (state: ValueStreamState, payload: DeleteValueStreamSuccessPayload): ValueStreamState => {
     const { streamId } = payload
     const valueStreamStructMap = { ...state.valueStreamStructMap }
     delete valueStreamStructMap[streamId]
@@ -105,7 +109,7 @@ const handleDeleteValueStreamSuccess = (state: ValueStreamState, payload: Delete
     }
 }
 
-const handleUpdateStepsSuccess = (state: ValueStreamState, payload: UpdateStepsSuccessPayload) => {
+const handleUpdateStepsSuccess = (state: ValueStreamState, payload: UpdateStepsSuccessPayload): ValueStreamState => {
     const { streamId, steps: newSteps } = payload
     const valueStreamStructMap = { ...state.valueStreamStructMap }
     const streamStruct = valueStreamStructMap[streamId]
@@ -117,7 +121,7 @@ const handleUpdateStepsSuccess = (state: ValueStreamState, payload: UpdateStepsS
     }
 }
 
-const handleSetModifiedStep = (state: ValueStreamState, payload: SetModifiedStepPayload) => {
+const handleSetModifiedStep = (state: ValueStreamState, payload: SetModifiedStepPayload): ValueStreamState => {
     const { step } = payload
     return {
         ...state,
@@ -125,7 +129,7 @@ const handleSetModifiedStep = (state: ValueStreamState, payload: SetModifiedStep
     }
 }
 
-const handleSetModifiedValueStream = (state: ValueStreamState, payload: SetModifiedValueStreamPayload) => {
+const handleSetModifiedValueStream = (state: ValueStreamState, payload: SetModifiedValueStreamPayload): ValueStreamState => {
     const { valueStream } = payload
     return {
         ...state,
@@ -133,12 +137,20 @@ const handleSetModifiedValueStream = (state: ValueStreamState, payload: SetModif
     }
 }
 
-const handleUpdateMemberSuccess = (state: ValueStreamState, payload: UpdateMemberSuccessPayload) => {
+const handleUpdateMemberSuccess = (state: ValueStreamState, payload: UpdateMemberSuccessPayload): ValueStreamState => {
     const { streamId, members } = payload
     const vsMemberMap = { ...state.vsMemberMap }
     vsMemberMap[streamId] = members
     return {
         ...state,
         vsMemberMap
+    }
+}
+
+const handleSetStepToDelete = (state: ValueStreamState, payload: SetStepToDeletePayload): ValueStreamState => {
+    const { step } = payload
+    return {
+        ...state,
+        stepToDelete: step
     }
 }

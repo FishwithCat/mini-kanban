@@ -118,6 +118,12 @@ export const setModifiedValueStream = (valueStream: ValueStreamBaseInfo | null):
     payload: { valueStream }
 })
 
+export interface SetStepToDeletePayload { step: Step | null }
+export const setStepToDelete = (step: Step | null): TypedAction<SetStepToDeletePayload> => ({
+    type: valueStreamActionKeys.setStepToDelete,
+    payload: { step }
+})
+
 export interface InviteMemberPayload {
     streamId: string,
     memberName: string
