@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { useCardDetail } from '@/web/hooks/useCardDetail';
 import { useDispatch } from 'react-redux';
-import { fetchCardDetail, updateCard, setModifiedCard, archiveCard } from '@/web/redux/cards/cardsActions';
+import { fetchCardDetail, updateCard, setModifiedCard, archiveCard, abandonCard } from '@/web/redux/cards/cardsActions';
 import { EmptyArray } from '@/model/empty';
 import { MemberTag } from '@/web/components/MemberTag';
 import { useValueStreamMembers } from '@/web/hooks/useValueStreamMembers';
@@ -103,6 +103,11 @@ export const CardDetail: React.FC<CardDetailProps> = React.memo(props => {
         dispatch(archiveCard(streamId, cardToEdit.id))
     }
 
+    const onAbandonCard = () => {
+        if (!cardToEdit?.id) return
+        dispatch(abandonCard(streamId, cardToEdit.id))
+    }
+
     const priorityMenu = () => {
         return <MMenu>
             {
@@ -124,7 +129,7 @@ export const CardDetail: React.FC<CardDetailProps> = React.memo(props => {
 
             <Separator />
 
-            <StyledMenuItem className="danger" onClick={() => { }}>
+            <StyledMenuItem className="danger" onClick={onAbandonCard}>
                 <i className="iconfont icon-delete" />
                 <div className="name">丢弃卡片</div>
             </StyledMenuItem>

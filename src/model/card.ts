@@ -1,6 +1,8 @@
 import { UserBaseInfo, User } from "./user";
 
+/** string for stepId */
 export const ARCHIVE = '__ARCHIVE'
+export const ABANDON = '__ABANDON'
 
 export interface TimePoint {
     stepId: string,

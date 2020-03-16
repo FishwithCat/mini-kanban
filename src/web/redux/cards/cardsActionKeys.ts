@@ -20,4 +20,7 @@ export default {
 
     archiveCard: 'ARCHIVE_CARD',
     archiveCardSuccess: 'ARCHIVE_CARD_SUCCESS',
+
+    abandonCard: 'ABANDON_CARD',
+    abandonCardSuccess: 'ABANDON_CARD_SUCCESS',
 }

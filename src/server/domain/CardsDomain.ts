@@ -1,16 +1,18 @@
 import { createDbHandler } from '../infrastructure/db';
-import { Card, TimePoint, ARCHIVE } from '@/model/card'
+import { Card, TimePoint, ARCHIVE, ABANDON } from '@/model/card'
 import { EmptyArray } from '@/model/empty';
 
 
 class CardsDomain {
     private mainDbHandler: any
     private archiveDbHandler: any
+    private abandonDbHandler: any
 
     constructor(streamId: string) {
         const init: Card[] = []
         this.mainDbHandler = createDbHandler(streamId, init)
         this.archiveDbHandler = createDbHandler(`ARCHIVE_${streamId}`, init)
+        this.abandonDbHandler = createDbHandler(`ABANDON_${streamId}`, init)
     }
 
     queryCard = async (cardId: string) => {
@@ -63,6 +65,19 @@ class CardsDomain {
         });
         await (await this.mainDbHandler).remove({ id: cardId }).write();
         await (await this.archiveDbHandler).push(cardInfo).write()
+        return cardInfo
+    }
+
+    abandonCard = async (cardId: string) => {
+        const cardInfo: Card | undefined = await (await this.mainDbHandler).find({ id: cardId }).value()
+        if (!cardInfo?.id) return
+        let timeLime: TimePoint[] = cardInfo.timeLine ?? [];
+        timeLime.push({
+            stepId: ABANDON,
+            timeStamp: new Date().valueOf()
+        });
+        await (await this.mainDbHandler).remove({ id: cardId }).write();
+        await (await this.abandonDbHandler).push(cardInfo).write()
         return cardInfo
     }
 }

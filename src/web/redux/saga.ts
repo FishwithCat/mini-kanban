@@ -25,7 +25,8 @@ function* rootSaga() {
         takeEvery(cardsActionKeys.moveCard, cardsSaga.moveCard),
         takeLatest(cardsActionKeys.fetchCardDetail, cardsSaga.fetchCardDetail),
         takeLatest(cardsActionKeys.updateCard, cardsSaga.updateCard),
-        takeLatest(cardsActionKeys.archiveCard, cardsSaga.archiveCard)
+        takeLatest(cardsActionKeys.archiveCard, cardsSaga.archiveCard),
+        takeLatest(cardsActionKeys.abandonCard, cardsSaga.abandonCard)
     ])
 }
 

@@ -140,3 +140,21 @@ export const archiveCardSuccess = (streamId: string, card: Card): TypedAction<Ar
     type: cardsActionKeys.archiveCardSuccess,
     payload: { streamId, card }
 })
+
+export interface AbandonCardPayload {
+    streamId: string,
+    cardId: string
+}
+export const abandonCard = (streamId: string, cardId: string): TypedAction<AbandonCardPayload> => ({
+    type: cardsActionKeys.abandonCard,
+    payload: { streamId, cardId }
+})
+
+export interface AbandonCardSuccessPayload {
+    streamId: string,
+    card: Card
+}
+export const abandonCardSuccess = (streamId: string, card: Card): TypedAction<AbandonCardSuccessPayload> => ({
+    type: cardsActionKeys.abandonCardSuccess,
+    payload: { streamId, card }
+})

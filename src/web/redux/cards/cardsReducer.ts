@@ -53,6 +53,7 @@ export const cardsReducer: Reducer<CardsState, TypedAction> = (state = initState
         case cardsActionKeys.updateCardSuccess:
             return handleUpdateCardSuccess(state, action.payload)
         case cardsActionKeys.archiveCardSuccess:
+        case cardsActionKeys.abandonCardSuccess:
             return handleArchiveCardSuccess(state, action.payload)
         default:
             return state

@@ -67,4 +67,11 @@ cardsRouter.post('/archive', async (ctx, next) => {
     ctx.body = await cardsDomain.archiveCard(cardId)
 })
 
+cardsRouter.post('/abandon', async (ctx, next) => {
+    const { streamId, cardId } = ctx.request.body
+    if (!streamId || !cardId) return
+    const cardsDomain = getCardsDomain(streamId)
+    ctx.body = await cardsDomain.abandonCard(cardId)
+})
+
 export default cardsRouter
