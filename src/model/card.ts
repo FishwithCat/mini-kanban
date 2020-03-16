@@ -1,5 +1,7 @@
 import { UserBaseInfo, User } from "./user";
 
+export const ARCHIVE = '__ARCHIVE'
+
 export interface TimePoint {
     stepId: string,
     timeStamp: number

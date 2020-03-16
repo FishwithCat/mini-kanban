@@ -17,4 +17,7 @@ export default {
 
     updateCard: 'UPDATE_CARD',
     updateCardSuccess: 'UPDATE_CARD_SUCCESS',
+
+    archiveCard: 'ARCHIVE_CARD',
+    archiveCardSuccess: 'ARCHIVE_CARD_SUCCESS',
 }

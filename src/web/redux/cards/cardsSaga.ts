@@ -4,7 +4,7 @@ import { TypedAction } from "@/model/action";
 import { store } from '@/web/redux/create-store';
 import {
     CreateCardPayload, createCardSuccess,
-    FetchCardsOfStepPayload, fetchCardsOfStepSuccess, MoveCardPayload, moveCardFailed, moveCardImmediately, FetchCardDetailPayload, fetchCardDetailSuccess, UpdateCardPayload, updateCardSuccess
+    FetchCardsOfStepPayload, fetchCardsOfStepSuccess, MoveCardPayload, moveCardFailed, moveCardImmediately, FetchCardDetailPayload, fetchCardDetailSuccess, UpdateCardPayload, updateCardSuccess, ArchiveCardPayload, archiveCardSuccess
 } from "./cardsActions";
 import { DragInfo, Card } from '@/model/card';
 import { CardsMap } from './cardsReducer';
@@ -103,8 +103,26 @@ function* updateCard(action: TypedAction<UpdateCardPayload>) {
     } catch (error) {
 
     }
-
 }
+
+function* archiveCard(action: TypedAction<ArchiveCardPayload>) {
+    const payload = action.payload!
+    const { streamId, cardId } = payload
+    if (!streamId || !cardId) return
+    try {
+        const result = yield call(action => {
+            return CardsApi.archiveCard(streamId, cardId)
+        }, null)
+
+        if (result && result.id) {
+            yield put(archiveCardSuccess(streamId, result))
+        }
+    } catch (error) {
+
+    }
+}
+
+
 
 const _getCardList = (streamId: string, stepId: string, cardsMap: CardsMap) => {
     const path = `${streamId}/${stepId}`
@@ -127,5 +145,6 @@ export default {
     fetchCardsOfStep,
     moveCard,
     fetchCardDetail,
-    updateCard
+    updateCard,
+    archiveCard
 }

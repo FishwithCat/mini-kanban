@@ -60,4 +60,11 @@ cardsRouter.put('/', async (ctx, next) => {
     ctx.body = await cardsDomain.updateCardInfo(card)
 })
 
+cardsRouter.post('/archive', async (ctx, next) => {
+    const { streamId, cardId } = ctx.request.body
+    if (!streamId || !cardId) return
+    const cardsDomain = getCardsDomain(streamId)
+    ctx.body = await cardsDomain.archiveCard(cardId)
+})
+
 export default cardsRouter

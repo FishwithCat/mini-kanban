@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { useCardDetail } from '@/web/hooks/useCardDetail';
 import { useDispatch } from 'react-redux';
-import { fetchCardDetail, updateCard, setModifiedCard } from '@/web/redux/cards/cardsActions';
+import { fetchCardDetail, updateCard, setModifiedCard, archiveCard } from '@/web/redux/cards/cardsActions';
 import { EmptyArray } from '@/model/empty';
 import { MemberTag } from '@/web/components/MemberTag';
 import { useValueStreamMembers } from '@/web/hooks/useValueStreamMembers';
@@ -14,6 +14,8 @@ import { MButton } from '../MButton';
 import { MDropDown } from '../MDropdown';
 import { MMenu, MenuItem } from '../MMenu';
 import { priorityColorMap } from '@/web/utils/colors';
+import { MTooltip } from '../MTooltip';
+import { Separator } from '../Separator';
 
 
 const priorityChoices = [
@@ -96,6 +98,11 @@ export const CardDetail: React.FC<CardDetailProps> = React.memo(props => {
         dispatch(setModifiedCard(streamId, null))
     }
 
+    const onArchiveCard = () => {
+        if (!cardToEdit?.id) return
+        dispatch(archiveCard(streamId, cardToEdit.id))
+    }
+
     const priorityMenu = () => {
         return <MMenu>
             {
@@ -108,8 +115,35 @@ export const CardDetail: React.FC<CardDetailProps> = React.memo(props => {
         </MMenu>
     }
 
+    const menu = (
+        <MMenu>
+            <StyledMenuItem onClick={onArchiveCard}>
+                <i className="iconfont icon-filedone" />
+                <div className="name">归档卡片</div>
+            </StyledMenuItem>
+
+            <Separator />
+
+            <StyledMenuItem className="danger" onClick={() => { }}>
+                <i className="iconfont icon-delete" />
+                <div className="name">丢弃卡片</div>
+            </StyledMenuItem>
+        </MMenu>
+    )
+
     return cardToEdit ? (
         <Wrapper className="card-detail">
+            <div className="card-tool">
+                <MDropDown overlay={menu}>
+                    <i className="iconfont icon-ellipsis" />
+                </MDropDown>
+                {/* <MTooltip title="卡片归档" placement="bottomRight">
+                    <i className="iconfont" />
+                </MTooltip>
+                <MTooltip title="卡片丢弃" placement="bottomRight">
+                    <i className="iconfont icon-delete" />
+                </MTooltip> */}
+            </div>
             <div className="header">
                 <h1 className="title">{cardToEdit.title}</h1>
                 {
@@ -171,8 +205,21 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
 
+    .card-tool {
+        height: 32px;
+        line-height: 32px;
+        padding: 0 20px;
+        text-align: right;
+
+        > i {
+            cursor: pointer;
+            font-size: 18px;
+            margin-left: 10px;
+        }
+    }
+
     .header {
-        padding: 20px 20px 0;
+        padding: 0 20px;
 
         .title {
             font-size: 20px;
@@ -261,10 +308,18 @@ const FormItem = styled.div`
 `
 
 const StyledMenuItem = styled(MenuItem)`
-    padding: 5px 20px;
-    /* display: flex; */
+    padding: 5px 10px;
+    display: flex;
 
-    /* > i {
+    > i {
         margin-right: 10px;
-    } */
+    }
+
+    &:hover {
+        color: #2196f3;
+    }
+
+    &.danger:hover {
+        color: #ff4d4f;
+    }
 `

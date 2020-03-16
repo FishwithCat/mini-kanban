@@ -14,6 +14,7 @@ import { MDrawer } from '@/web/components/MDrawer';
 import { RootState } from '@/web/redux/create-store';
 import { CardDetail } from '@/web/components/CardDetail';
 import { MModal } from '@/web/components/MModal';
+import { MTooltip } from '@/web/components/MTooltip';
 
 
 interface ValueStreamProps {
@@ -77,10 +78,11 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
         <Wrapper className="value-stream">
             <Menu className="menu">
                 <div className="left">
-                    <i className="iconfont refresh" />
                 </div>
                 <div className="right">
-                    <i className="iconfont icon-team" onClick={() => setShowMembers(true)} />
+                    <MTooltip title="成员">
+                        <i className="iconfont icon-team" onClick={() => setShowMembers(true)} />
+                    </MTooltip>
                 </div>
             </Menu>
             <div className="value-stream-content">
@@ -122,6 +124,7 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                     onClose={onCloseModifiedCardModal}
                     placement="right"
                     width="500"
+                    closable={false}
                     destroyOnClose
                 >
                     {

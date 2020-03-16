@@ -12,6 +12,7 @@ import { Separator } from '@/web/components/Separator';
 import { MDropDown } from '@/web/components/MDropdown';
 import { MMenu, MenuItem } from '@/web/components/MMenu';
 import { ClickParam } from 'antd/es/menu';
+import { MTooltip } from '@/web/components/MTooltip';
 
 
 interface StepViewProps {
@@ -81,9 +82,11 @@ export const StepView: React.FC<StepViewProps> = React.memo(props => {
                 <div className="tools">
                     {
                         canCreateCard &&
-                        <i className="add-card iconfont icon-plus"
-                            onClick={onShowCreateBox}
-                        />
+                        <MTooltip title="新建卡片">
+                            <i className="add-card iconfont icon-plus"
+                                onClick={onShowCreateBox}
+                            />
+                        </MTooltip>
                     }
                     <MDropDown overlay={menu}>
                         <i className="more iconfont icon-ellipsis" />

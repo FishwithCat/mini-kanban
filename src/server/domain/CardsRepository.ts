@@ -5,17 +5,17 @@ import CardsDomain from './CardsDomain';
  */
 class CardsRepository {
     private cardsDomainMap: Record<string, CardsDomain>
+    private static instance: CardsRepository;
 
     constructor() {
         this.cardsDomainMap = {}
     }
 
     static getRepository = () => {
-        let singleton;
-        if (!singleton) {
-            singleton = new CardsRepository()
+        if (!CardsRepository.instance) {
+            CardsRepository.instance = new CardsRepository()
         }
-        return singleton
+        return CardsRepository.instance
     }
 
     getCardsDomain = (streamId: string) => {

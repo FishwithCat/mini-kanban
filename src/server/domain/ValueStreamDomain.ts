@@ -9,17 +9,17 @@ import { immutableUpdateList, immutableUpdateObjList } from '@/model/utils';
  */
 class ValueStreamDomain {
     private dbHandler: any
+    private static instance: ValueStreamDomain;
 
     constructor() {
         this.dbHandler = createDbHandler('valueStreams', [])
     }
 
     static getInstance = () => {
-        let singleton;
-        if (!singleton) {
-            singleton = new ValueStreamDomain()
+        if (!ValueStreamDomain.instance) {
+            ValueStreamDomain.instance = new ValueStreamDomain()
         }
-        return singleton
+        return ValueStreamDomain.instance
     }
 
     createValueStream = async (valueStream: ValueStream) => {

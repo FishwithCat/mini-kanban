@@ -21,4 +21,12 @@ export const moveCards = (streamId: string, cardId: string, to: CardPosition) =>
 
 export const updateCard = (streamId: string, card: Card) => {
     return Request.put('/cards', { streamId, card }).then(res => res.data)
-} 
+}
+
+export const archiveCard = (streamId: string, cardId: string) => {
+    return Request.post('/cards/archive', { streamId, cardId }).then(res => res.data)
+}
+
+export const abandonCard = (streamId: string, cardId: string) => {
+    return Request.post('/cards/abandon', { streamId, cardId }).then(res => res.data)
+}

@@ -122,3 +122,21 @@ export const updateCardSuccess = (streamId: string, card: Card): TypedAction<Upd
     type: cardsActionKeys.updateCardSuccess,
     payload: { streamId, card }
 })
+
+export interface ArchiveCardPayload {
+    streamId: string,
+    cardId: string
+}
+export const archiveCard = (streamId: string, cardId: string): TypedAction<ArchiveCardPayload> => ({
+    type: cardsActionKeys.archiveCard,
+    payload: { streamId, cardId }
+})
+
+export interface ArchiveCardSuccessPayload {
+    streamId: string,
+    card: Card
+}
+export const archiveCardSuccess = (streamId: string, card: Card): TypedAction<ArchiveCardSuccessPayload> => ({
+    type: cardsActionKeys.archiveCardSuccess,
+    payload: { streamId, card }
+})

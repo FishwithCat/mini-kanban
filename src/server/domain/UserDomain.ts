@@ -9,6 +9,7 @@ import { createDbHandler } from '../infrastructure/db'
 
 class UsersDomain {
     private dbHandler: any
+    private static instance: UsersDomain;
 
     constructor() {
         const users: User[] = []
@@ -16,11 +17,10 @@ class UsersDomain {
     }
 
     static getInstance = () => {
-        let singleton;
-        if (!singleton) {
-            singleton = new UsersDomain()
+        if (!UsersDomain.instance) {
+            UsersDomain.instance = new UsersDomain()
         }
-        return singleton
+        return UsersDomain.instance
     }
 
     getUserList = async () => {

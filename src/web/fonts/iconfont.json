@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4766459",
+      "name": "file done",
+      "font_class": "filedone",
+      "unicode": "e7b4",
+      "unicode_decimal": 59316
+    },
+    {
       "icon_id": "4936682",
       "name": "thunderbolt-fill",
       "font_class": "thunderbolt-fill",

@@ -6,12 +6,14 @@ import {
     FetchCardsOfStepSuccessPayload, CreateCardSuccessPayload,
     MoveCardImmediatelyPayload, SetModifiedCardPayload,
     FetchCardDetailSuccessPayload,
-    UpdateCardSuccessPayload
+    UpdateCardSuccessPayload,
+    ArchiveCardSuccessPayload
 } from "./cardsActions";
 import { listImmutableDelete, listImmutableInsert } from "@/web/utils/immutable";
 import { EmptyArray } from "@/model/empty";
-import { immutableUpdateObjList } from "@/model/utils";
+import { immutableUpdateObjList, immutableDeleteObjFromList } from "@/model/utils";
 
+/** path: 'streamId/stepId' */
 export type CardsMap = Record<path, Card[]>
 
 export interface ModifiedCard {
@@ -50,12 +52,14 @@ export const cardsReducer: Reducer<CardsState, TypedAction> = (state = initState
             return handleFetchCardDetailSuccess(state, action.payload)
         case cardsActionKeys.updateCardSuccess:
             return handleUpdateCardSuccess(state, action.payload)
+        case cardsActionKeys.archiveCardSuccess:
+            return handleArchiveCardSuccess(state, action.payload)
         default:
             return state
     }
 }
 
-const handleFetchCardsOfStepSuccess = (state: CardsState, payload: FetchCardsOfStepSuccessPayload) => {
+const handleFetchCardsOfStepSuccess = (state: CardsState, payload: FetchCardsOfStepSuccessPayload): CardsState => {
     const { streamId, stepId, cards } = payload
     const cardsMap = { ...state.cardsMap }
     const path = `${streamId}/${stepId}`
@@ -66,7 +70,7 @@ const handleFetchCardsOfStepSuccess = (state: CardsState, payload: FetchCardsOfS
     }
 }
 
-const handleCreateCardSuccess = (state: CardsState, payload: CreateCardSuccessPayload) => {
+const handleCreateCardSuccess = (state: CardsState, payload: CreateCardSuccessPayload): CardsState => {
     const { streamId, stepId, card } = payload
     const cardsMap = { ...state.cardsMap }
     const path = `${streamId}/${stepId}`
@@ -83,7 +87,7 @@ const handleCreateCardSuccess = (state: CardsState, payload: CreateCardSuccessPa
     }
 }
 
-const handleMoveCardImmediateLy = (state: CardsState, payload: MoveCardImmediatelyPayload) => {
+const handleMoveCardImmediateLy = (state: CardsState, payload: MoveCardImmediatelyPayload): CardsState => {
     const { streamId, source, dest, newCard } = payload
     const { stepId: sourceStepId, index: sourceIndex } = source
     const { stepId: destStepId, index: destIndex } = dest
@@ -96,7 +100,7 @@ const handleMoveCardImmediateLy = (state: CardsState, payload: MoveCardImmediate
     }
 }
 
-const handleSetModifiedCard = (state: CardsState, payload: SetModifiedCardPayload) => {
+const handleSetModifiedCard = (state: CardsState, payload: SetModifiedCardPayload): CardsState => {
     const { streamId, cardId } = payload
     if (cardId == null) {
         return {
@@ -110,7 +114,7 @@ const handleSetModifiedCard = (state: CardsState, payload: SetModifiedCardPayloa
     }
 }
 
-const handleFetchCardDetailSuccess = (state: CardsState, payload: FetchCardDetailSuccessPayload) => {
+const handleFetchCardDetailSuccess = (state: CardsState, payload: FetchCardDetailSuccessPayload): CardsState => {
     const { card } = payload
     if (!card?.id) return state
     return {
@@ -119,13 +123,27 @@ const handleFetchCardDetailSuccess = (state: CardsState, payload: FetchCardDetai
     }
 }
 
-const handleUpdateCardSuccess = (state: CardsState, payload: UpdateCardSuccessPayload) => {
+const handleUpdateCardSuccess = (state: CardsState, payload: UpdateCardSuccessPayload): CardsState => {
     const { streamId, card } = payload
     if (!streamId || !card.id) return state
     const { stepId } = card
     const path = `${streamId}/${stepId}`
     const cardsMap = { ...state.cardsMap }
     cardsMap[path] = immutableUpdateObjList((cardsMap[path] ?? EmptyArray), card, 'id')
+    return {
+        ...state,
+        cardsMap,
+        modifiedCard: null
+    }
+}
+
+const handleArchiveCardSuccess = (state: CardsState, payload: ArchiveCardSuccessPayload): CardsState => {
+    const { streamId, card } = payload
+    if (!streamId || !card.id) return state
+    const { stepId } = card
+    const path = `${streamId}/${stepId}`
+    const cardsMap = { ...state.cardsMap }
+    cardsMap[path] = immutableDeleteObjFromList((cardsMap[path] ?? EmptyArray), card, 'id')
     return {
         ...state,
         cardsMap,
