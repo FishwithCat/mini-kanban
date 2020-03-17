@@ -104,7 +104,7 @@ export const AppSideBar: React.FC<AppSideBarProps> = React.memo(props => {
                         {
                             availableStreams.filter(stream => stream.id !== undefined)
                                 .map(stream => (
-                                    <Option value={stream.id!}>
+                                    <Option key={stream.id} value={stream.id!}>
                                         {stream.name}
                                     </Option>
                                 ))

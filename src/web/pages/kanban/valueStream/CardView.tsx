@@ -110,9 +110,9 @@ export const CardView: React.FC<CardViewProps> = React.memo(props => {
                         {
                             participants
                                 .slice(0, 2)
-                                .map((member: UserBaseInfo) => {
-                                    return <div className="name" style={{ color: getMemberColor(member.id) }}>{member.name}</div>
-                                })
+                                .map((member: UserBaseInfo) => (
+                                    <div key={member.id} className="name" style={{ color: getMemberColor(member.id) }}>{member.name}</div>
+                                ))
                         }
                     </div>
                 </MTooltip>

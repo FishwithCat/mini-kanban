@@ -27,7 +27,7 @@ export const EditableText: React.FC<EditableTextPayload> = React.memo(props => {
                     />
                     :
                     <React.Fragment>
-                        <text className="content">{value}</text>
+                        <span className="content">{value}</span>
                         <i className="iconfont icon-edit-square" onClick={() => setEditMode(true)} />
                     </React.Fragment>
             }

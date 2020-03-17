@@ -36,7 +36,7 @@ export const StepContent: React.FC<StepContentProps> = React.memo(props => {
         const card = data[index];
 
         return card ? (
-            <Draggable draggableId={card.id} index={index} key={card.id}>
+            <Draggable draggableId={card.id} index={index}>
                 {
                     provided => (
                         <DraggableCardView
@@ -80,6 +80,7 @@ export const StepContent: React.FC<StepContentProps> = React.memo(props => {
                                             width={width}
                                             outerRef={provided.innerRef}
                                             itemData={cards}
+                                            itemKey={(index, data: Card[]) => data[index].id}
                                         >
                                             {Row}
                                         </FixedSizeList>
