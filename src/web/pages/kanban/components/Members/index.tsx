@@ -122,6 +122,7 @@ const MemberInfoWrapper = styled.div`
         border-radius: 50%;
         text-align: center;
         color: #fff;
+        font-size: 12px;
     }
 
     .full {

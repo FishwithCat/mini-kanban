@@ -16,6 +16,7 @@ import { MMenu, MenuItem } from '../MMenu';
 import { priorityColorMap } from '@/web/utils/colors';
 import { MTooltip } from '../MTooltip';
 import { Separator } from '../Separator';
+import { EditableText } from '../EditableText';
 
 
 const priorityChoices = [
@@ -72,6 +73,11 @@ export const CardDetail: React.FC<CardDetailProps> = React.memo(props => {
             color,
             border: `1px solid ${color}`
         }
+    }
+
+    const onTitleChange = (newTitle: string) => {
+        if (!cardToEdit) return
+        setCardToEdit({ ...cardToEdit, title: newTitle })
     }
 
     const onPriorityChange = (newPriority: Priority) => {
@@ -142,21 +148,15 @@ export const CardDetail: React.FC<CardDetailProps> = React.memo(props => {
                 <MDropDown overlay={menu}>
                     <i className="iconfont icon-ellipsis" />
                 </MDropDown>
-                {/* <MTooltip title="卡片归档" placement="bottomRight">
-                    <i className="iconfont" />
-                </MTooltip>
-                <MTooltip title="卡片丢弃" placement="bottomRight">
-                    <i className="iconfont icon-delete" />
-                </MTooltip> */}
             </div>
             <div className="header">
-                <h1 className="title">{cardToEdit.title}</h1>
+                <StyledEditableText value={cardToEdit.title} onChange={onTitleChange} />
+
                 {
                     cardDetail?.timeLine && cardDetail?.timeLine.length > 0 &&
                     <TimeStamp>
                         {dayjs(cardDetail.timeLine[0].timeStamp).format('YYYY/MM/DD HH:mm')}
                     </TimeStamp>
-
                 }
             </div>
             <div className="card-content">
@@ -225,11 +225,6 @@ const Wrapper = styled.div`
 
     .header {
         padding: 0 20px;
-
-        .title {
-            font-size: 20px;
-            margin: 0;
-        }
     }
     
     .card-content {
@@ -326,5 +321,12 @@ const StyledMenuItem = styled(MenuItem)`
 
     &.danger:hover {
         color: #ff4d4f;
+    }
+`
+
+const StyledEditableText = styled(EditableText)`
+    .content, .edit-area {
+        font-size: 20px;
+        margin: 0;
     }
 `
