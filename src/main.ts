@@ -16,7 +16,8 @@ const createWindow = () => {
             webSecurity: true
         }
     })
-    // win.maximize()
+
+    win.maximize()
 
     // Open the DevTools.
     win.loadURL('http://localhost:3000')
