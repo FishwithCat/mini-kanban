@@ -7,7 +7,7 @@ import { EmptyArray } from '@/model/empty';
 
 const COLORS = ['#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#F78DA7', '#9900EF']
 
-export const useValueStreamMembers = (streamId: string) => {
+export const useValueStreamMembers = (streamId: string): UserBaseInfo[] => {
 
     const vsMembers = useSelector((state: RootState) => state.valueStreamReducer.vsMemberMap[streamId] ?? EmptyArray)
 

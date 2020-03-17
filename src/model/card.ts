@@ -19,11 +19,12 @@ export enum Priority {
 export interface CardInfo {
     title: string,
     stepId: string,
+    position: number /** position 决定卡片前后顺序 */
     describe?: any, // Delta
+    blockInfo?: string,
     participants?: UserBaseInfo[],
     timeLine?: TimePoint[],
     priority?: Priority,
-    position: number /** position 决定卡片前后顺序 */
 }
 
 export interface Card extends CardInfo {

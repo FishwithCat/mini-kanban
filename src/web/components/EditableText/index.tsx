@@ -22,7 +22,7 @@ export const EditableText: React.FC<EditableTextPayload> = React.memo(props => {
                 editMode ?
                     <StyledTextArea className="edit-area" defaultValue={value} autoFocus autoSize
                         onBlur={onFinishEdit}
-                        onFocus={e => e.target.setSelectionRange(-1, -1)}
+                        onFocus={(e: React.FocusEvent<HTMLTextAreaElement>) => e.target.setSelectionRange(-1, -1)}
                         onPressEnter={onFinishEdit}
                     />
                     :
