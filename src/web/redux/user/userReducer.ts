@@ -9,6 +9,7 @@ import { listImmutableDelete } from "@/web/utils/immutable";
 import { ValueStreamBaseInfo } from "@/model/ValueStream";
 import { EmptyArray } from "@/model/empty";
 import { immutableUpdateList, immutableUpdateObjList } from "@/model/utils";
+import { CURRENT_USER, UserInStorage } from "@/web/localstorage";
 
 type UserId = string
 export interface UserState {
@@ -47,21 +48,24 @@ const handleLoginSuccess = (state: UserState, payload: LoginSuccessPayload) => {
     if (!name) return state
     const availableStreamMap = { ...state.availableStreamMap }
     let activeStreamId = null
-    const localStorageStreamId = localStorage.getItem('active')
+
+    const userInStorage: UserInStorage | undefined = localStorage.getItem(CURRENT_USER) ? JSON.parse(localStorage.getItem(CURRENT_USER)!) : null
 
     if (available.length > 0) {
-        if (localStorageStreamId && available.findIndex(stream => stream.id === localStorageStreamId)) {
-            activeStreamId = localStorageStreamId
+        if (userInStorage) {
+            const { id: userIdInStorage, active } = userInStorage
+            if (id === userIdInStorage && active && available.findIndex(item => item.id === active) >= 0) {
+                activeStreamId = active
+            } else {
+                activeStreamId = available[0].id
+            }
         } else {
             activeStreamId = available[0].id
         }
     }
     availableStreamMap[id] = available ?? EmptyArray
 
-    localStorage.setItem('currentUser', JSON.stringify(({ id, name })))
-    if (activeStreamId) {
-        localStorage.setItem('active', activeStreamId)
-    }
+    localStorage.setItem(CURRENT_USER, JSON.stringify(({ id, name, active: activeStreamId })))
 
     return {
         ...state,
@@ -72,7 +76,7 @@ const handleLoginSuccess = (state: UserState, payload: LoginSuccessPayload) => {
 }
 
 const handleLogout = (state: UserState): UserState => {
-    localStorage.removeItem('currentUser')
+    localStorage.removeItem(CURRENT_USER)
 
     return {
         ...state,
@@ -82,8 +86,11 @@ const handleLogout = (state: UserState): UserState => {
 
 const handleSetActiveKanban = (state: UserState, payload: SetActiveValueStreamPayload) => {
     const { streamId } = payload
-
-    if (streamId) localStorage.setItem('active', streamId)
+    const { currentUser } = state
+    if (currentUser) {
+        const { id, name } = currentUser
+        localStorage.setItem(CURRENT_USER, JSON.stringify(({ id, name, active: streamId })))
+    }
 
     return {
         ...state,

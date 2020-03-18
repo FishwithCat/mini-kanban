@@ -4,6 +4,7 @@ import { useCurrentUser } from '@/web/hooks/useCurrentUser';
 import { useDispatch } from 'react-redux';
 import { login } from '../redux/user/userActions';
 import { UserBaseInfo } from '@/model/user';
+import { CURRENT_USER } from '../localstorage';
 
 
 export const PrivateRouter: React.FC<RouteProps> = React.memo(props => {
@@ -17,13 +18,15 @@ export const PrivateRouter: React.FC<RouteProps> = React.memo(props => {
     }, [currentUser])
 
     const redirect = React.useCallback(() => {
-        const cookie = localStorage.getItem('currentUser')
-        if (!cookie) {
+        const storage = localStorage.getItem(CURRENT_USER)
+        if (!storage) {
             setTimeout(() => {
                 history.replace("/login");
             }, 300)
         } else {
-            const currentUser: UserBaseInfo = JSON.parse(cookie)
+            const userInStorage = JSON.parse(storage)
+            const { id, name } = userInStorage
+            const currentUser: UserBaseInfo = { id, name }
             dispatch(login(currentUser.name))
         }
     }, [history, isAuthenticated])
