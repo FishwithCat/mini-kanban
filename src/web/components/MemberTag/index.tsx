@@ -33,7 +33,7 @@ export const MemberTag: React.FC<MemberTagProps> = React.memo(props => {
                     <StyledMenuItem key={member.id} className="member-tags"
                         disabled={participants.findIndex(item => item.id === member.id) >= 0}
                         onClick={() => onChoseMember(member)}>
-                        <i className="iconfont icon-edit" />
+                        <i className="iconfont icon-user" />
                         <div className="name">{member.name}</div>
                     </StyledMenuItem>
                 ))
