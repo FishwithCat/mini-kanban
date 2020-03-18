@@ -33,12 +33,13 @@ class CardsDomain {
     }
 
     updateCardPosition = async (cardId: string, stepId: string, position: number) => {
-        const cardInfo: Card = await (await this.mainDbHandler).find({ id: cardId }).value()
+        const mainDbHandler = await this.mainDbHandler
+        const cardInfo: Card = await mainDbHandler.find({ id: cardId }).value()
         let timeLime = cardInfo.timeLine ?? EmptyArray
         if (cardInfo.stepId !== stepId) {
             timeLime = timeLime.concat({ stepId, timeStamp: new Date().valueOf() })
         }
-        return (await this.mainDbHandler).find({ id: cardId })
+        return mainDbHandler.find({ id: cardId })
             .set('stepId', stepId)
             .set('position', position)
             .set('timeLine', timeLime)

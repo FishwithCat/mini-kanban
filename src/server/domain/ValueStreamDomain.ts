@@ -43,16 +43,18 @@ class ValueStreamDomain {
     }
 
     updateValueStreamStep = async (id: string, newStep: Step) => {
-        let steps: Step[] = await (await this.dbHandler).find({ id }).get(`steps`).value()
+        const dbHandler = await this.dbHandler
+        let steps: Step[] = await dbHandler.find({ id }).get(`steps`).value()
         steps = immutableUpdateObjList(steps, newStep, 'id')
-        return (await this.dbHandler).find({ id }).set(`steps`, steps).write()
+        return dbHandler.find({ id }).set(`steps`, steps).write()
     }
 
     deleteStep = async (valueStreamId: string, stepId: string) => {
-        let steps: Step[] = await (await this.dbHandler).find({ id: valueStreamId }).get(`steps`).value()
+        const dbHandler = await this.dbHandler
+        let steps: Step[] = await dbHandler.find({ id: valueStreamId }).get(`steps`).value()
         if (!steps) return null
         steps = steps.filter(item => item.id !== stepId)
-        return (await this.dbHandler).find({ id: valueStreamId }).set(`steps`, steps).write()
+        return dbHandler.find({ id: valueStreamId }).set(`steps`, steps).write()
     }
 
     getAvailableValueStreamOfUser = async (userId: string) => {
@@ -63,16 +65,18 @@ class ValueStreamDomain {
     }
 
     updateMembers = async (valueStreamId: string, newMemberId: string) => {
-        let members: string[] = await (await this.dbHandler).find({ id: valueStreamId }).get(`members`).value()
+        const dbHandler = await this.dbHandler
+        let members: string[] = await dbHandler.find({ id: valueStreamId }).get(`members`).value()
         if (!members) return
         members = immutableUpdateList(members, newMemberId)
-        return (await this.dbHandler).find({ id: valueStreamId }).set(`members`, members).write()
+        return dbHandler.find({ id: valueStreamId }).set(`members`, members).write()
     }
 
     deleteMember = async (valueStreamId: string, memberId: string) => {
-        let members: string[] = await (await this.dbHandler).find({ id: valueStreamId }).get('members').value()
+        const dbHandler = await this.dbHandler
+        let members: string[] = await dbHandler.find({ id: valueStreamId }).get('members').value()
         members = members.filter(item => item !== memberId)
-        return (await this.dbHandler).find({ id: valueStreamId }).set(`members`, members).write()
+        return dbHandler.find({ id: valueStreamId }).set(`members`, members).write()
     }
 }
 
