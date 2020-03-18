@@ -56,28 +56,38 @@ class CardsDomain {
     }
 
     archiveCard = async (cardId: string) => {
-        const cardInfo: Card | undefined = await (await this.mainDbHandler).find({ id: cardId }).value()
+        const mainDbHandler = (await this.mainDbHandler)
+        const archiveDbHandler = (await this.archiveDbHandler)
+
+        const cardInfo: Card | undefined = await mainDbHandler.find({ id: cardId }).value()
         if (!cardInfo?.id) return
+
         let timeLime: TimePoint[] = cardInfo.timeLine ?? [];
         timeLime.push({
             stepId: ARCHIVE,
             timeStamp: new Date().valueOf()
         });
-        await (await this.mainDbHandler).remove({ id: cardId }).write();
-        await (await this.archiveDbHandler).push(cardInfo).write()
+        await mainDbHandler.remove({ id: cardId }).write();
+        await archiveDbHandler.push(cardInfo).write()
         return cardInfo
     }
 
     abandonCard = async (cardId: string) => {
-        const cardInfo: Card | undefined = await (await this.mainDbHandler).find({ id: cardId }).value()
+        const mainDbHandler = (await this.mainDbHandler)
+        const abandonDbHandler = (await this.abandonDbHandler)
+
+        const cardInfo: Card | undefined = await mainDbHandler.find({ id: cardId }).value()
         if (!cardInfo?.id) return
-        let timeLime: TimePoint[] = cardInfo.timeLine ?? [];
-        timeLime.push({
+        let timeLime: TimePoint[] = cardInfo.timeLine ? [...cardInfo.timeLine] : EmptyArray;
+        timeLime = timeLime.concat({
             stepId: ABANDON,
             timeStamp: new Date().valueOf()
         });
-        await (await this.mainDbHandler).remove({ id: cardId }).write();
-        await (await this.abandonDbHandler).push(cardInfo).write()
+        await mainDbHandler.remove({ id: cardId }).write();
+        await abandonDbHandler.push({
+            ...cardInfo,
+            timeLime
+        }).write()
         return cardInfo
     }
 }
