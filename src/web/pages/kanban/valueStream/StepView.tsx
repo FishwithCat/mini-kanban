@@ -13,19 +13,29 @@ import { MDropDown } from '@/web/components/MDropdown';
 import { MMenu, MenuItem } from '@/web/components/MMenu';
 import { ClickParam } from 'antd/es/menu';
 import { MTooltip } from '@/web/components/MTooltip';
+import { EmptyArray } from '@/model/empty';
 
 
 interface StepViewProps {
     streamId: string,
     step: Step,
-    canCreateCard?: boolean
+    canCreateCard?: boolean,
+    filteredMember?: string
 }
 export const StepView: React.FC<StepViewProps> = React.memo(props => {
-    const { streamId, step, canCreateCard } = props
+    const { streamId, step, canCreateCard, filteredMember } = props
     const [showCreateBox, setShowCreateBox] = React.useState(false)
 
     const dispatch = useDispatch()
-    const cards = useCardsOfStep(streamId, step.id)
+    const cardsOfStep = useCardsOfStep(streamId, step.id)
+
+    const cards = React.useMemo(() => {
+        if (!filteredMember) return cardsOfStep
+        return cardsOfStep.filter(card => {
+            return (card.participants ?? EmptyArray).findIndex(userInfo => userInfo.id === filteredMember) >= 0
+        })
+    }, [cardsOfStep, filteredMember])
+
 
     const onShowCreateBox = React.useCallback(() => setShowCreateBox(true), [])
 

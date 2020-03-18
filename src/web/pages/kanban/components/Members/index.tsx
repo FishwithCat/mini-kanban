@@ -11,10 +11,12 @@ import { inviteMember, deleteMember } from '@/web/redux/valueStream/valueStreamA
 
 interface MembersProps {
     streamId: string,
+    filteredMember?: string,
+    setFilteredMember?(memberId: string | undefined): void
     // closeMembers(): void
 }
 export const Members: React.FC<MembersProps> = React.memo(props => {
-    const { streamId } = props
+    const { streamId, filteredMember, setFilteredMember } = props
     const [filter, setFilter] = React.useState('')
 
     const members = useValueStreamMembers(streamId)
@@ -38,6 +40,14 @@ export const Members: React.FC<MembersProps> = React.memo(props => {
         dispatch(deleteMember(streamId, memberId))
     }
 
+    const onClickMember = (memberId: string) => {
+        if (!setFilteredMember) return
+        if (filteredMember === memberId) {
+            return setFilteredMember(undefined)
+        }
+        setFilteredMember(memberId)
+    }
+
     return (
         <MembersWrapper className="members">
             <div className="head">
@@ -58,10 +68,13 @@ export const Members: React.FC<MembersProps> = React.memo(props => {
                     (members ?? []).filter(member => member.name.indexOf(filter) >= 0)
                         .map((member, index) => {
                             return (
-                                <MemberInfo key={member.id} member={member}
+                                <MemberInfo key={member.id}
+                                    member={member}
+                                    isActive={member.id === filteredMember}
                                     color={member.color ?? '#0693E3'}
                                     canDelete={member.id !== members![0].id}
                                     onDelete={onDeleteMember}
+                                    onClick={() => onClickMember(member.id)}
                                 />
                             )
                         })
@@ -73,16 +86,18 @@ export const Members: React.FC<MembersProps> = React.memo(props => {
 
 interface MemberInfoProps {
     member: UserBaseInfo,
+    isActive: boolean,
     color: string,
     canDelete: boolean,
     onDelete(memberId: string): void
+    onClick?(): void
 }
 const MemberInfo: React.FC<MemberInfoProps> = React.memo(props => {
-    const { member, color, canDelete, onDelete } = props
+    const { member, color, isActive, canDelete, onDelete, onClick } = props
     const name = member.name
 
     return (
-        <MemberInfoWrapper className="member-info">
+        <MemberInfoWrapper className={isActive ? 'member-info active' : 'member-info'} onClick={onClick}>
             <div className="avatar" style={{ backgroundColor: color }}>
                 {name.slice(0, 1).toUpperCase() + name.slice(1, 2)}
             </div>
@@ -103,12 +118,18 @@ const MemberInfoWrapper = styled.div`
     display: flex;
     height: 42px;
     padding: 5px 10px;
+    box-sizing: border-box;
+
+    &.active {
+        border-left: 3px solid #1890ff;
+        background-color: #e6f7ff;
+    }
 
     .delete-member {
         display: none;
     }
 
-    &:hover {
+    &:not(.active):hover {
         background-color: #f0f0f0;
         
         .delete-member {

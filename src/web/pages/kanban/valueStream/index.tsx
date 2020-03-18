@@ -24,6 +24,7 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
     const { id } = props
 
     const [showMembers, setShowMembers] = React.useState(false)
+    const [filteredMember, setFilteredMember] = React.useState<string>()
 
     const dispatch = useDispatch()
     const valueStream = useValueStream(id)
@@ -81,7 +82,9 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                 </div>
                 <div className="right">
                     <MTooltip title="成员">
-                        <i className="iconfont icon-team" onClick={() => setShowMembers(true)} />
+                        <i className="iconfont icon-team" style={{ color: filteredMember ? '#2196f3' : "#333" }}
+                            onClick={() => setShowMembers(true)}
+                        />
                     </MTooltip>
                 </div>
             </Menu>
@@ -96,7 +99,9 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                                         <StepView key={step.id}
                                             streamId={id}
                                             step={step}
-                                            canCreateCard={index === 0} />
+                                            canCreateCard={index === 0}
+                                            filteredMember={filteredMember}
+                                        />
                                     ))
                                 }
 
@@ -117,6 +122,8 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                 >
                     <Members
                         streamId={id}
+                        filteredMember={filteredMember}
+                        setFilteredMember={setFilteredMember}
                     />
                 </MDrawer>
                 <VisibleDrawer
