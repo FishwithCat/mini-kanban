@@ -996,6 +996,13 @@
     "@types/keygrip" "*"
     "@types/node" "*"
 
+"@types/echarts@^4.4.3":
+  version "4.4.3"
+  resolved "https://registry.npm.taobao.org/@types/echarts/download/@types/echarts-4.4.3.tgz#9a04003c3a70cc6feb38de5220cc1d079f19f2cb"
+  integrity sha1-mgQAPDpwzG/rON5SIMwdB58Z8ss=
+  dependencies:
+    "@types/zrender" "*"
+
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/@types/events/download/@types/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
@@ -1305,6 +1312,11 @@
     "@types/uglify-js" "*"
     "@types/webpack-sources" "*"
     source-map "^0.6.0"
+
+"@types/zrender@*":
+  version "4.0.0"
+  resolved "https://registry.npm.taobao.org/@types/zrender/download/@types/zrender-4.0.0.tgz#a6806f12ec4eccaaebd9b0d816f049aca6188fbd"
+  integrity sha1-poBvEuxOzKrr2bDYFvBJrKYYj70=
 
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
@@ -2982,6 +2994,21 @@ ecc-jsbn@~0.1.1:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
 
+echarts-for-react@^2.0.15-beta.1:
+  version "2.0.15-beta.1"
+  resolved "https://registry.npm.taobao.org/echarts-for-react/download/echarts-for-react-2.0.15-beta.1.tgz#1afa21ee0f08f9023eff0b5ab3351f2fe0f708b6"
+  integrity sha1-Gvoh7g8I+QI+/wtaszUfL+D3CLY=
+  dependencies:
+    fast-deep-equal "^2.0.1"
+    size-sensor "^0.2.0"
+
+echarts@^4.7.0:
+  version "4.7.0"
+  resolved "https://registry.npm.taobao.org/echarts/download/echarts-4.7.0.tgz#5b3875a4c2f91e3929425fabab9eace7e4098b3f"
+  integrity sha1-Wzh1pML5HjkpQl+rq56s5+QJiz8=
+  dependencies:
+    zrender "4.3.0"
+
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.npm.taobao.org/ee-first/download/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
@@ -3376,6 +3403,11 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.npm.taobao.org/extsprintf/download/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
+
+fast-deep-equal@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npm.taobao.org/fast-deep-equal/download/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
+  integrity sha1-ewUhjd+WZ79/Nwv3/bLLFf3Qqkk=
 
 fast-deep-equal@^3.1.1:
   version "3.1.1"
@@ -7069,6 +7101,11 @@ signal-exit@^3.0.0:
   resolved "https://registry.npm.taobao.org/signal-exit/download/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
+size-sensor@^0.2.0:
+  version "0.2.6"
+  resolved "https://registry.npm.taobao.org/size-sensor/download/size-sensor-0.2.6.tgz#6fe43afd570786f097171834002a97fe0b19a3da"
+  integrity sha1-b+Q6/VcHhvCXFxg0ACqX/gsZo9o=
+
 snapdragon-node@^2.0.1:
   version "2.1.1"
   resolved "https://registry.npm.taobao.org/snapdragon-node/download/snapdragon-node-2.1.1.tgz#6c175f86ff14bdb0724563e8f3c1b021a286853b"
@@ -8247,3 +8284,8 @@ ylru@^1.2.0:
   version "1.2.1"
   resolved "https://registry.npm.taobao.org/ylru/download/ylru-1.2.1.tgz#f576b63341547989c1de7ba288760923b27fe84f"
   integrity sha1-9Xa2M0FUeYnB3nuiiHYJI7J/6E8=
+
+zrender@4.3.0:
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/zrender/download/zrender-4.3.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fzrender%2Fdownload%2Fzrender-4.3.0.tgz#9f056121b20bbae44414d287bf6a119ff7042661"
+  integrity sha1-nwVhIbILuuREFNKHv2oRn/cEJmE=

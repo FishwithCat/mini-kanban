@@ -53,5 +53,6 @@ const KanbanWrapper = styled.div`
 
     .content {
         flex: 1;
+        overflow: hidden;
     }
 `

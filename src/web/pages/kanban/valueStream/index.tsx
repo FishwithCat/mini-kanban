@@ -3,9 +3,7 @@ import styled from 'styled-components';
 import { useValueStream } from '@/web/hooks/useValueStream';
 import { useDispatch, useSelector } from 'react-redux';
 import { generate } from 'shortid';
-// import { updateSteps } from '@/web/redux/valueStream/valueStreamActions';
-import { StepView } from './StepView';
-import { DragDropContext, DropResult, DraggableLocation } from 'react-beautiful-dnd';
+import { DropResult, DraggableLocation } from 'react-beautiful-dnd';
 import { moveCard, setModifiedCard } from '@/web/redux/cards/cardsActions';
 import { ModifyStepModal } from '../components/ModifyStep/ModifyStepModal';
 import { updateStep, fetchValueStream, fetchValueStreamMembers, deleteStep, setStepToDelete } from '@/web/redux/valueStream/valueStreamActions';
@@ -15,6 +13,8 @@ import { RootState } from '@/web/redux/create-store';
 import { CardDetail } from '@/web/components/CardDetail';
 import { MModal } from '@/web/components/MModal';
 import { MTooltip } from '@/web/components/MTooltip';
+import { ValueStreamInner } from './ValueStreamInner';
+import { Dashboard } from '../dashboard';
 
 
 interface ValueStreamProps {
@@ -24,6 +24,7 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
     const { id } = props
 
     const [showMembers, setShowMembers] = React.useState(false)
+    const [showDashboard, setShowDashboard] = React.useState(false)
     const [filteredMember, setFilteredMember] = React.useState<string>()
 
     const dispatch = useDispatch()
@@ -58,17 +59,14 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
         return sourceId === destId && sourceIndex === destIndex
     }
 
-    const onDragEnd = React.useCallback(
-        (result: DropResult) => {
-            const { source, destination } = result
-            if (!destination || _isSameLocation(source, destination)) return
-            dispatch(moveCard(id,
-                { stepId: source.droppableId, index: source.index },
-                { stepId: destination.droppableId, index: destination.index }
-            ))
-        },
-        [id]
-    )
+    const onDragEnd = React.useCallback((result: DropResult) => {
+        const { source, destination } = result
+        if (!destination || _isSameLocation(source, destination)) return
+        dispatch(moveCard(id,
+            { stepId: source.droppableId, index: source.index },
+            { stepId: destination.droppableId, index: destination.index }
+        ))
+    }, [id])
 
     React.useEffect(() => {
         dispatch(fetchValueStream(id))
@@ -81,37 +79,31 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                 <div className="left">
                 </div>
                 <div className="right">
+                    <MTooltip title="图表">
+                        <i className={showDashboard ? 'active iconfont icon-barchart' : 'iconfont icon-barchart'}
+                            onClick={() => setShowDashboard(prev => !prev)}
+                        />
+                    </MTooltip>
                     <MTooltip title="成员">
-                        <i className="iconfont icon-team" style={{ color: filteredMember ? '#2196f3' : "#333" }}
-                            onClick={() => setShowMembers(true)}
+                        <i className={filteredMember ? 'active iconfont icon-team' : 'iconfont icon-team'}
+                            onClick={() => setShowMembers(prev => !prev)}
                         />
                     </MTooltip>
                 </div>
             </Menu>
             <div className="value-stream-content">
-                <div className="value-stream-content-scroll-area">
-                    {
-                        valueStream?.steps &&
-                        <DragDropContext onDragEnd={onDragEnd}>
-                            <div className="step-box">
-                                {
-                                    valueStream.steps.map((step, index) => (
-                                        <StepView key={step.id}
-                                            streamId={id}
-                                            step={step}
-                                            canCreateCard={index === 0}
-                                            filteredMember={filteredMember}
-                                        />
-                                    ))
-                                }
+                {
+                    !showDashboard ?
+                        <ValueStreamInner
+                            id={id}
+                            valueStream={valueStream}
+                            onDragEnd={onDragEnd}
+                            filteredMember={filteredMember}
+                            onCreateStep={onCreateStep}
+                        />
+                        : <Dashboard id={id} />
 
-                                <div className="create-step-btn" >
-                                    <span onClick={onCreateStep}>新建步骤</span>
-                                </div>
-                            </div>
-                        </DragDropContext>
-                    }
-                </div>
+                }
                 <MDrawer
                     closable={false}
                     visible={showMembers}
@@ -126,6 +118,7 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                         setFilteredMember={setFilteredMember}
                     />
                 </MDrawer>
+
                 <VisibleDrawer
                     visible={Boolean(modifiedCardInfo)}
                     onClose={onCloseModifiedCardModal}
@@ -141,31 +134,33 @@ export const ValueStream: React.FC<ValueStreamProps> = React.memo(props => {
                         />
                     }
                 </VisibleDrawer>
-                <MModal visible={Boolean(stepToDelete)}
-                    onOk={onDeleteStep}
-                    onCancel={onCancelDeleteStep}
-                    okText='删除'
-                    cancelText='取消'
-                    okType="danger"
-                >
-                    {
-                        stepToDelete &&
-                        <DeleteStepWrapper>
-                            <h2>
-                                确认删除 {stepToDelete.name} ?
-                            </h2>
-                            <div>
-                                步骤下卡片可能会丢失
-                            </div>
-                        </DeleteStepWrapper>
 
-                    }
-                </MModal>
             </div>
+            <MModal visible={Boolean(stepToDelete)}
+                onOk={onDeleteStep}
+                onCancel={onCancelDeleteStep}
+                okText='删除'
+                cancelText='取消'
+                okType="danger"
+            >
+                {
+                    stepToDelete &&
+                    <DeleteStepWrapper>
+                        <h2>
+                            确认删除 {stepToDelete.name} ?
+                            </h2>
+                        <div>
+                            步骤下卡片可能会丢失
+                            </div>
+                    </DeleteStepWrapper>
+
+                }
+            </MModal>
             <ModifyStepModal streamId={id} />
         </Wrapper>
     )
 })
+
 
 const Menu = styled.div`
     height: 32px;
@@ -180,6 +175,20 @@ const Menu = styled.div`
     
     .right {
         text-align: right;
+
+        > i {
+            margin-left: 10px;
+            transition: color .3s ease-out;
+
+            &:hover, &.active {
+                color: #2196f3;
+            }
+
+            &.icon-barchart {
+                position: relative;
+                top: 1px;
+            }
+        }
     }
 
 
