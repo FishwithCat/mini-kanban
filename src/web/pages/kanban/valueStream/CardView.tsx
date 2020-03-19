@@ -80,13 +80,13 @@ export const CardView: React.FC<CardViewProps> = React.memo(props => {
     const blockMessage = React.useMemo(() => {
         const { timeLine } = card
         if (!timeLine || timeLine.length < 1) return { color: 'transparent', message: null }
-        const count = Math.abs(new Date().valueOf() - timeLine[timeLine.length - 1].timeStamp) / 1000 / 86400
+        const count = dayjs().diff(dayjs(timeLine[timeLine.length - 1].timeStamp), 'day')
         let color = '#333'
         if (count > 7) color = '#ff9800'
         else if (count > 14) color = '#f44336'
         return {
             color,
-            message: count >= 1 ? `${Math.floor(count)}天` : null
+            message: count >= 1 ? `${count}天` : null
         }
     }, [card.timeLine])
 
