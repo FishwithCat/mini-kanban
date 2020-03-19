@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4766299",
+      "name": "bar chart",
+      "font_class": "barchart",
+      "unicode": "e7af",
+      "unicode_decimal": 59311
+    },
+    {
+      "icon_id": "4766481",
+      "name": "file-copy",
+      "font_class": "file-copy",
+      "unicode": "e7bc",
+      "unicode_decimal": 59324
+    },
+    {
+      "icon_id": "4937000",
+      "name": "github-fill",
+      "font_class": "github-fill",
+      "unicode": "e885",
+      "unicode_decimal": 59525
+    },
+    {
       "icon_id": "4766459",
       "name": "file done",
       "font_class": "filedone",
