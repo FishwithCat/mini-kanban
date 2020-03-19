@@ -81,7 +81,7 @@ export const CardView: React.FC<CardViewProps> = React.memo(props => {
         const { timeLine } = card
         if (!timeLine || timeLine.length < 1) return { color: 'transparent', message: null }
         const count = dayjs().diff(dayjs(timeLine[timeLine.length - 1].timeStamp), 'day')
-        let color = '#333'
+        let color = '#8e8e8e'
         if (count > 7) color = '#ff9800'
         else if (count > 14) color = '#f44336'
         return {
