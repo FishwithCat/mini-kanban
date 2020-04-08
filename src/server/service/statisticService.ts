@@ -30,7 +30,7 @@ const _generateLeadTimeMap = (cards: Card[]): Record<number, string[]> => {
         const startDate = timeLine[0]
         const endDate = timeLine[timeLine.length - 1]
         if (endDate.stepId !== '__ARCHIVE') return
-        const duration = dayjs(startDate.timeStamp).diff(dayjs(endDate.timeStamp), 'day')
+        const duration = dayjs(endDate.timeStamp).diff(dayjs(startDate.timeStamp), 'day')
         leadTimeMap[duration] = leadTimeMap[duration] ? leadTimeMap[duration].concat(card.id) : [card.id]
     })
     return leadTimeMap
