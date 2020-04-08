@@ -3,6 +3,7 @@ import bodyParser from 'koa-bodyparser';
 import cardsRouter from './service/cardsService';
 import userRouter from './service/userService';
 import valueStreamRouter from './service/valueStreamService';
+import statisticRouter from './service/statisticService';
 import koaStatic from 'koa-static';
 
 export const startServer = (port: number, indexPagePath: string | null = null): void => {
@@ -16,6 +17,7 @@ export const startServer = (port: number, indexPagePath: string | null = null): 
     app.use(cardsRouter.routes())
     app.use(userRouter.routes())
     app.use(valueStreamRouter.routes())
+    app.use(statisticRouter.routes())
 
     app.listen(port);
     console.log(`Server listening on port ${port}!`)

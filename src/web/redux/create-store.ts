@@ -3,6 +3,7 @@ import { createStore, combineReducers, applyMiddleware, CombinedState, Reducer }
 import { userReducer, UserState } from './user/userReducer';
 import { valueStreamReducer, ValueStreamState } from './valueStream/valueStreamReducer';
 import { cardsReducer, CardsState } from './cards/cardsReducer';
+import { statisticReducer, StatisticState } from './statistic/statisticReducer';
 import rootSaga from './saga';
 
 const initialState = {}
@@ -10,7 +11,8 @@ const initialState = {}
 const rootReducer = combineReducers({
     userReducer,
     valueStreamReducer,
-    cardsReducer
+    cardsReducer,
+    statisticReducer
 })
 
 const sagaMiddleware = createSagaMiddleware()
@@ -23,5 +25,6 @@ sagaMiddleware.run(rootSaga);
 export interface RootState {
     userReducer: UserState,
     valueStreamReducer: ValueStreamState,
-    cardsReducer: CardsState
+    cardsReducer: CardsState,
+    statisticReducer: StatisticState
 }

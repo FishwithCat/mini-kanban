@@ -5,6 +5,8 @@ import valueStreamActionKeys from './valueStream/valueStreamActionKeys';
 import valueStreamSaga from './valueStream/valueStreamSaga';
 import cardsActionKeys from './cards/cardsActionKeys';
 import cardsSaga from './cards/cardsSaga';
+import statisticActionKeys from './statistic/statisticActionKeys';
+import statisticSaga from './statistic/statisticSaga';
 
 function* rootSaga() {
     yield all([
@@ -26,7 +28,10 @@ function* rootSaga() {
         takeLatest(cardsActionKeys.fetchCardDetail, cardsSaga.fetchCardDetail),
         takeLatest(cardsActionKeys.updateCard, cardsSaga.updateCard),
         takeLatest(cardsActionKeys.archiveCard, cardsSaga.archiveCard),
-        takeLatest(cardsActionKeys.abandonCard, cardsSaga.abandonCard)
+        takeLatest(cardsActionKeys.abandonCard, cardsSaga.abandonCard),
+
+        takeLatest(statisticActionKeys.fetchLeadTimeData, statisticSaga.fetchLeadTimeData),
+        takeLatest(statisticActionKeys.fetchThroughputData, statisticSaga.fetchThroughputData)
     ])
 }
 

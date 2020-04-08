@@ -1,6 +1,7 @@
 import { createDbHandler } from '../infrastructure/db';
 import { Card, TimePoint, ARCHIVE, ABANDON } from '@/model/card'
 import { EmptyArray } from '@/model/empty';
+import { Query } from '@/model/query';
 
 
 class CardsDomain {
@@ -90,6 +91,15 @@ class CardsDomain {
             timeLime
         }).write()
         return cardInfo
+    }
+
+    queryCardsByCondition = async (query: Query) => {
+        const mainDbHandler = (await this.mainDbHandler)
+        const archiveDbHandler = (await this.archiveDbHandler)
+        const condition = query.generateCondition()
+        const cardsInMainDb = await mainDbHandler.filter(condition)
+        const cardsInArchiveDb = await archiveDbHandler.filter(condition)
+        return [...cardsInMainDb, ...cardsInArchiveDb]
     }
 }
 

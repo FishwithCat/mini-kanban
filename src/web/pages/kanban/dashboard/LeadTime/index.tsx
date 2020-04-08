@@ -1,29 +1,54 @@
 import React from 'react';
-import { MBarChart } from '@/web/components/MBarChart';
+import { MBarChart, BarData } from '@/web/components/MBarChart';
 import styled from 'styled-components';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { FilterMenu } from './FilterMenu';
+import { FilterMenu, LeadTimeFilter } from './FilterMenu';
+import dayjs from 'dayjs';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchLeadTimeData } from '@/web/redux/statistic/statisticActions';
+import { BaseQuery } from '@/model/query';
+import { RootState } from '@/web/redux/create-store';
+
+const getDefaultLeadTImeFilter = (): LeadTimeFilter => {
+    return {
+        period: {
+            start: dayjs().subtract(14, 'day').valueOf(),
+            end: dayjs().valueOf()
+        }
+    }
+}
 
 interface LeadTimeProps {
-
+    streamId: string
 }
 export const LeadTime: React.FC<LeadTimeProps> = React.memo(props => {
-    const data = [
-        { label: 1, value: 1 },
-        { label: 2, value: 0 },
-        { label: 3, value: 5 },
-        { label: 4, value: 4 },
-        { label: 5, value: 3 },
-        { label: 6, value: 3 },
-        { label: 7, value: 2 },
-        { label: 8, value: 1 },
-        { label: 9, value: 1 },
-        { label: 10, value: 1 },
-    ]
+    const { streamId } = props
+    const [filter, setFilter] = React.useState<LeadTimeFilter>(getDefaultLeadTImeFilter())
+
+    const dispatch = useDispatch()
+
+    const leadTimeData = useSelector((state: RootState) => state.statisticReducer.leadTimeData)
+
+    const onQuery = React.useCallback(() => {
+        const query = new BaseQuery(filter.period)
+        dispatch(fetchLeadTimeData(streamId, query))
+    }, [streamId, filter])
+
+    const data = React.useMemo(() => {
+        let chartData: BarData[] = []
+        const { data: chart } = leadTimeData
+        for (let key in chart) {
+            chartData = chartData.concat({
+                label: key,
+                value: chart[key].length
+            })
+        }
+        return chartData
+    }, [leadTimeData])
 
     return (
         <LeadTimeWrapper className="lead-time-view">
-            <FilterMenu />
+            <FilterMenu filter={filter} onChange={setFilter} onQuery={onQuery} />
             <div className="chart-area">
                 <AutoSizer>
                     {
@@ -31,7 +56,7 @@ export const LeadTime: React.FC<LeadTimeProps> = React.memo(props => {
                             <MBarChart data={data}
                                 width={width}
                                 height={height}
-                                margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
+                                margin={{ top: 30, right: 40, bottom: 30, left: 40 }}
                                 colors={['#2196f3']}
                             />
                         )

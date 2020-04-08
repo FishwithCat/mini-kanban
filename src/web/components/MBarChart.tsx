@@ -6,7 +6,7 @@ import 'echarts/lib/component/grid';
 import 'echarts/lib/component/legend';
 import 'echarts/lib/component/tooltip';
 
-interface BarData {
+export interface BarData {
     label: string | number,
     value: number
 }
@@ -25,6 +25,9 @@ export const MBarChart: React.FC<MBarChartProps> = React.memo(props => {
         const categoryAxis = {
             type: 'category',
             data: data.map(item => item.label),
+            axisLine: {
+                show: false
+            }
             // axisLabel: {
             //     formatter: (value: string, index: number) => limitText(value, 10, '...')
             // }

@@ -7,7 +7,7 @@ import { Card } from '@/model/card';
 const cardsRouter = new router()
 cardsRouter.prefix('/api/cards')
 
-const getCardsDomain = (streamId: string) => {
+export const getCardsDomain = (streamId: string) => {
     const cardsRepository = CardsRepository.getRepository()
     return cardsRepository.getCardsDomain(streamId)
 }

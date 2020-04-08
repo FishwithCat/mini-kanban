@@ -13,11 +13,11 @@ export const Dashboard: React.FC<DashboardProps> = React.memo(props => {
         <DashBardWrapper className="dashboard">
             <MTabs tabPosition="left">
                 <MTabPane tab="周期分布" key="leadtime">
-                    <LeadTime />
+                    <LeadTime streamId={id} />
                 </MTabPane>
-                <MTabPane tab="吞吐量" key="throughput">
+                {/* <MTabPane tab="吞吐量" key="throughput">
 
-                </MTabPane>
+                </MTabPane> */}
             </MTabs>
         </DashBardWrapper>
     )

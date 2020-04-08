@@ -1,10 +1,13 @@
 import CardsDomain from './CardsDomain';
 
+
+type StreamId = string;
+
 /**
  * singleton
  */
 class CardsRepository {
-    private cardsDomainMap: Record<string, CardsDomain>
+    private cardsDomainMap: Record<StreamId, CardsDomain>
     private static instance: CardsRepository;
 
     constructor() {
@@ -18,7 +21,7 @@ class CardsRepository {
         return CardsRepository.instance
     }
 
-    getCardsDomain = (streamId: string) => {
+    getCardsDomain = (streamId: StreamId) => {
         if (!this.cardsDomainMap[streamId]) {
             this.cardsDomainMap[streamId] = new CardsDomain(streamId)
         }
