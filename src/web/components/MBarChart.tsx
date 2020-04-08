@@ -36,6 +36,7 @@ export const MBarChart: React.FC<MBarChartProps> = React.memo(props => {
         const valueAxis = {
             type: 'value',
             axisLine: { show: false },
+            axisTick: { show: false },
             splitLine: {
                 lineStyle: {
                     type: 'dashed'

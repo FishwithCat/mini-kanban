@@ -8,10 +8,6 @@ import dayjs from 'dayjs';
 const statisticRouter = new router()
 statisticRouter.prefix('/api/statistic')
 
-interface LeadTimeData {
-    number: number,
-    payload?: any
-}
 
 statisticRouter.post('/leadtime', async (ctx, next) => {
     const { streamId, period } = ctx.request.body
