@@ -18,3 +18,8 @@ export interface Step {
     name: string,
     color?: string
 }
+
+export interface StepRange {
+    startStepId: string,
+    endStepId: string
+}

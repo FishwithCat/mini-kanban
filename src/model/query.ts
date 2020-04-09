@@ -1,6 +1,7 @@
 import { Period } from "./time";
 import { Card } from "./card";
 import dayjs, { Dayjs } from 'dayjs'
+import { StepRange } from "./ValueStream";
 
 export abstract class Query {
     abstract generateCondition(): (card: Card) => boolean
@@ -8,10 +9,12 @@ export abstract class Query {
 
 export class BaseQuery extends Query {
     period: Period;
+    stepRange: StepRange;
 
-    constructor(period: Period) {
+    constructor(period: Period, stepRange: StepRange) {
         super()
         this.period = period
+        this.stepRange = stepRange
     }
 
     generateCondition = () => {

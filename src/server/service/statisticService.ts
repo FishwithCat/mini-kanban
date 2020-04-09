@@ -10,8 +10,8 @@ statisticRouter.prefix('/api/statistic')
 
 
 statisticRouter.post('/leadtime', async (ctx, next) => {
-    const { streamId, period } = ctx.request.body
-    const query = new BaseQuery(period)
+    const { streamId, period, stepRange } = ctx.request.body
+    const query = new BaseQuery(period, stepRange)
     const cardsDomain = getCardsDomain(streamId)
     const cards = await cardsDomain.queryCardsByCondition(query)
     ctx.body = _generateLeadTimeMap(cards)

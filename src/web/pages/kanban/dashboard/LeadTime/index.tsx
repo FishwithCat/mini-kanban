@@ -8,12 +8,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchLeadTimeData } from '@/web/redux/statistic/statisticActions';
 import { BaseQuery } from '@/model/query';
 import { RootState } from '@/web/redux/create-store';
+import { useValueStream } from '@/web/hooks/useValueStream';
+import { EmptyArray } from '@/model/empty';
+import { Step } from '@/model/ValueStream';
 
-const getDefaultLeadTImeFilter = (): LeadTimeFilter => {
+const getDefaultLeadTImeFilter = (steps: Step[]): LeadTimeFilter => {
     return {
         period: {
             start: dayjs().subtract(14, 'day').valueOf(),
             end: dayjs().valueOf()
+        },
+        stepRange: {
+            startStepId: steps[0].id,
+            endStepId: steps[steps.length - 1].id
         }
     }
 }
@@ -23,14 +30,16 @@ interface LeadTimeProps {
 }
 export const LeadTime: React.FC<LeadTimeProps> = React.memo(props => {
     const { streamId } = props
-    const [filter, setFilter] = React.useState<LeadTimeFilter>(getDefaultLeadTImeFilter())
+    const valueStreamStruct = useValueStream(streamId)
+    const steps = valueStreamStruct?.steps ?? EmptyArray
+    const leadTimeData = useSelector((state: RootState) => state.statisticReducer.leadTimeData)
+
+    const [filter, setFilter] = React.useState<LeadTimeFilter>(getDefaultLeadTImeFilter(steps))
 
     const dispatch = useDispatch()
 
-    const leadTimeData = useSelector((state: RootState) => state.statisticReducer.leadTimeData)
-
     const onQuery = React.useCallback(() => {
-        const query = new BaseQuery(filter.period)
+        const query = new BaseQuery(filter.period, filter.stepRange)
         dispatch(fetchLeadTimeData(streamId, query))
     }, [streamId, filter])
 
@@ -48,7 +57,7 @@ export const LeadTime: React.FC<LeadTimeProps> = React.memo(props => {
 
     return (
         <LeadTimeWrapper className="lead-time-view">
-            <FilterMenu filter={filter} onChange={setFilter} onQuery={onQuery} />
+            <FilterMenu steps={steps} filter={filter} onChange={setFilter} onQuery={onQuery} />
             <div className="chart-area">
                 <AutoSizer>
                     {

@@ -5,7 +5,8 @@ import { BaseQuery } from '@/model/query';
 export const fetchLeadTimeData = (streamId: string, query: BaseQuery) => {
     return Request.post(`/statistic/leadtime`, {
         streamId,
-        period: query.period
+        period: query.period,
+        stepRange: query.stepRange
     }).then(res => {
         return res.data
     })
